@@ -115,5 +115,5 @@
     </div>
 </div>
 <!-- JavsScript -->
-<script src="/assets/js/layer.js"></script>
+<script src="modules/servers/shadowsocks/templates/static/js/layer.js"></script>
 <script src="modules/servers/shadowsocks/templates/static/js/script.js"></script>

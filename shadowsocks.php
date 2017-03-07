@@ -5,7 +5,7 @@ function initialize(array $params)
 	$query['DELETE_RECYCLE'] = 'DELETE FROM `recycle_bin` WHERE `port` = :port';
 	$query['ADD_RECYCLE'] = 'INSERT INTO `recycle_bin`(`port`,`created_at`) VALUES (:port,UNIX_TIMESTAMP())';
 	$query['LATEST_USER'] = 'SELECT `port` FROM `user` ORDER BY `port` DESC LIMIT 1';
-	$query['CREATE_ACCOUNT'] = 'INSERT INTO `user`(`passwd`,`transfer_enable`,`port`,`created_at`,`need_reset`,`sid`) VALUES (:passwd,:transfer_enable,:port,UNIX_TIMESTAMP(),:need_reset,:sid)';
+	$query['CREATE_ACCOUNT'] = 'INSERT INTO `user`(`passwd`,`u`,`d`,`transfer_enable`,`port`,`created_at`,`updated_at`,`need_reset`,`sid`) VALUES (:passwd,0,0,:transfer_enable,:port,UNIX_TIMESTAMP(),0,:need_reset,:sid)';
 	$query['ALREADY_EXISTS'] = 'SELECT `port` FROM `user` WHERE `sid` = :sid';
 	$query['ENABLE'] = 'UPDATE `user` SET `enable` = :enable WHERE `sid` = :sid';
 	$query['DELETE_ACCOUNT'] = 'DELETE FROM `user` WHERE `sid` = :sid';

@@ -91,6 +91,7 @@ $(document).ready(function() {
 				str = base64encode($(this).attr('data-params'));
 			}
 			str = $(this).attr('data-type') + '://' + str;
+			layer.closeAll();
 			layer.open({
 				type: 1,
 				title: $(this).attr('data-title'),
@@ -100,7 +101,7 @@ $(document).ready(function() {
 				closeBtn: 1,
 				shift: 2,
 				shadeClose: true,
-				content: '<img style="position: relative; left: 600px; width: 100%; height: 100%;" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/><div style="position: relative; overflow: auto; text-align: center; margin-bottom: 10px; font-size: 12px;">请使用 Shadowsocks 客户端进行扫描</div>'
+				content: '<img style="position: relative; left: 600px; width: 100%; height: 100%;" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/><div style="position: relative;  left: 600px; overflow: auto; text-align: center; margin-bottom: 100px; font-size: 12px;">请使用 Shadowsocks 客户端进行扫描</div>'
 			});
 		});
 	});

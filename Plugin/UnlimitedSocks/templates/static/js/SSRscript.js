@@ -77,9 +77,9 @@ $(document).ready(function() {
         var _this  = $(this);
         ping.ping('http://' + address,function(data) {
             if(data >= timeout) {
-                _this.parents('td').html('<span class="badge badge-danger">超时</span>');
+                _this.parents('td').html('<span class="badge badge-danger">X</span>');
             } else {
-                _this.parents('td').html('<span class="badge badge-primary">在线</span>');
+                _this.parents('td').html('<span class="badge badge-primary">√</span>');
             }
         },timeout);
     });
@@ -94,7 +94,7 @@ $(document).ready(function() {
 			str = $(this).attr('data-type') + '://' + str;
 			layer.open({
 				type: 1,
-				title: "请使用" + $(this).attr('data-type') + "客户端扫描",
+				title: $(this).attr('data-type'),
 				offset: 'auto',
 				closeBtn: 1,
 				shadeClose: true,

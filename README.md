@@ -7,8 +7,9 @@
 ## TO-DO List
 * ~~Readd custom traffic module~~
 * ~~Rewrite traffic chart for mobile support~~
-### Add multi-language support
+* ~~Add multi-language support~~
 * ~~Add SS/SSR switch function~~
+* Add additional bandwidth
 
 ## Other
 # More Info in http://www.mak-blog.com/whmcs-shadowsocks-plugin.html

@@ -3,8 +3,9 @@ if(!defined("WHMCS")){
   die("This file cannot be accessed directly");
 }
 
-function initialize(array $params , $date = false)
-{
+multi_language_support();
+
+function initialize(array $params , $date = false){
 	$query['RECYCLE'] = 'SELECT `port` FROM `recycle_bin` ORDER BY `created_at` DESC LIMIT 1';
 	$query['DELETE_RECYCLE'] = 'DELETE FROM `recycle_bin` WHERE `port` = :port';
 	$query['ADD_RECYCLE'] = 'INSERT INTO `recycle_bin`(`port`,`created_at`) VALUES (:port,UNIX_TIMESTAMP())';
@@ -26,8 +27,8 @@ function initialize(array $params , $date = false)
 	}
 	return $query;
 }
-function convert($number, $from, $to)
-{
+
+function convert($number, $from, $to){
 	$to = strtolower($to);
 	$from = strtolower($from);
 	switch ($from) {
@@ -65,29 +66,29 @@ function convert($number, $from, $to)
 	}
 	return $number;
 }
-function UnlimitedSocks_MetaData()
-{
+
+function UnlimitedSocks_MetaData(){
 	return array(
 		'DisplayName' => 'UnlimitedSocks', 
 		'RequiresServer' => true,
 		);
 }
-function UnlimitedSocks_ConfigOptions()
-{
+
+function UnlimitedSocks_ConfigOptions(){
 	return array(
-	'数据库名' => array('Type' => 'text', 'Size' => '25'),
-	'重置流量' => array(
+	get_lang('database') => array('Type' => 'text', 'Size' => '25'),
+	get_lang('resetbandwidth') => array(
 		'Type'        => 'dropdown',
-		'Options'     => array('1' => '需要重置', '0' => '不需要重置'),
-		'Description' => '是否需要重置流量'
+		'Options'     => array('1' => get_lang('need_reset'), '0' => get_lang('neednot_reset')),
+		'Description' => get_lang('resetbandwidth_description')
 		),
-	'流量限制' => array('Type' => 'text', 'Size' => '25', 'Description' => '单位MB 自定义流量套餐请勿填写'),
-	'起始端口' => array('Type' => 'text', 'Size' => '25', 'Description' => '如果数据库有记录此项无效'),
-	'线路列表' => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => '格式 xxx|服务器地址|加密方式|协议|协议参数|混淆|混淆参数|ss/ssr 一行一个')
+	get_lang('bandwidth') => array('Type' => 'text', 'Size' => '25', 'Description' => get_lang('bandwidth_description')),
+	get_lang('start_port') => array('Type' => 'text', 'Size' => '25', 'Description' => get_lang('start_port_description')),
+	get_lang('routelist') => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => get_lang('routelist_description'))
 	);
 }
-function UnlimitedSocks_TestConnection(array $params)
-{
+
+function UnlimitedSocks_TestConnection(array $params){
 	try {
 		$dbhost = $params['serverip'];
 		$dbuser = $params['serverusername'];
@@ -103,8 +104,8 @@ function UnlimitedSocks_TestConnection(array $params)
 	}
 	return array('success' => $success, 'error' => $errorMsg);
 }
-function UnlimitedSocks_RandomPass($length = 8)
-{
+
+function UnlimitedSocks_RandomPass($length = 8){
 	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_ []{}<>~`+=,.;:/?|'; 
 	$password = ''; 
 	for ( $i = 0; $i < $length; $i++ ) 
@@ -113,8 +114,8 @@ function UnlimitedSocks_RandomPass($length = 8)
 	} 
 	return $password; 
 }
-function UnlimitedSocks_CreateAccount(array $params)
-{
+
+function UnlimitedSocks_CreateAccount(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -175,8 +176,8 @@ function UnlimitedSocks_CreateAccount(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_SuspendAccount(array $params)
-{
+
+function UnlimitedSocks_SuspendAccount(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -200,8 +201,8 @@ function UnlimitedSocks_SuspendAccount(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_UnsuspendAccount(array $params)
-{
+
+function UnlimitedSocks_UnsuspendAccount(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -225,8 +226,8 @@ function UnlimitedSocks_UnsuspendAccount(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_TerminateAccount(array $params)
-{
+
+function UnlimitedSocks_TerminateAccount(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -268,8 +269,8 @@ function UnlimitedSocks_TerminateAccount(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_ChangePackage(array $params)
-{
+
+function UnlimitedSocks_ChangePackage(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -293,8 +294,8 @@ function UnlimitedSocks_ChangePackage(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_ChangePassword(array $params)
-{
+
+function UnlimitedSocks_ChangePassword(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -317,12 +318,12 @@ function UnlimitedSocks_ChangePassword(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_AdminCustomButtonArray()
-{
-	return array('重置流量' => 'ResetBandwidth');
+
+function UnlimitedSocks_AdminCustomButtonArray(){
+	return array(get_lang('resetbandwidth') => 'ResetBandwidth');
 }
-function UnlimitedSocks_ResetBandwidth(array $params)
-{
+
+function UnlimitedSocks_ResetBandwidth(array $params){
 	$query = initialize($params,time());
 	try {
 		$dbhost = ($params['serverip']);
@@ -347,8 +348,8 @@ function UnlimitedSocks_ResetBandwidth(array $params)
 		return $e->getMessage();
 	}
 }
-function UnlimitedSocks_ClientArea(array $params)
-{
+
+function UnlimitedSocks_ClientArea(array $params){
 	require_once 'Mobile_Detect.php';
 	$detect = new Mobile_Detect;
 	if($detect->isMobile()){
@@ -420,12 +421,12 @@ function UnlimitedSocks_ClientArea(array $params)
 		if ($usage && $usage['enable']) {
 			return array(
 			'tabOverviewReplacementTemplate' => 'details.tpl',
-			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i:s',time()))
+			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i',time()))
 			);
 		}
 		return array(
 		'tabOverviewReplacementTemplate' => 'error.tpl',
-		'templateVariables'              => array('usefulErrorHelper' => '出现了一些问题，可能您的服务还未开通，请稍后再来试试。')
+		'templateVariables'              => array('usefulErrorHelper' => get_lang('error_Service_Disable'))
 		);
 	}
 	catch (Exception $e) {
@@ -436,6 +437,7 @@ function UnlimitedSocks_ClientArea(array $params)
 	);
 	}
 }
+
 function make_script($name,$label,$data){
 	if($name and $label and $data){
 		$script = "
@@ -459,8 +461,8 @@ function make_script($name,$label,$data){
 		return $script;
 	}
 }
-function UnlimitedSocks_AdminServicesTabFields(array $params)
-{
+
+function UnlimitedSocks_AdminServicesTabFields(array $params){
 	$query = initialize($params);
 	try {
 		$dbhost = $params['serverip'];
@@ -473,7 +475,7 @@ function UnlimitedSocks_AdminServicesTabFields(array $params)
 		$userinfo->execute();
 		$userinfo = $userinfo->fetch();
 		if ($userinfo) {
-			return array('端口' => $userinfo['port'], '流量' => convert($userinfo['transfer_enable'], 'bytes', 'mb') . 'MB', '上传' => round(convert($userinfo['u'], 'bytes', 'mb')) . 'MB', '下载' => round(convert($userinfo['d'], 'bytes', 'mb')) . 'MB', '已用' => round(convert($userinfo['d'] + $userinfo['u'], 'bytes', 'mb')) . 'MB', '最后使用' => date('Y-m-d H:i:s', $userinfo['t']), '上次手动重置' => date('Y-m-d H:i:s', $userinfo['updated_at']));
+			return array(get_lang('port') => $userinfo['port'], get_lang('bandwidth') => convert($userinfo['transfer_enable'], 'bytes', 'mb') . 'MB', get_lang('upload') => round(convert($userinfo['u'], 'bytes', 'mb')) . 'MB', get_lang('download') => round(convert($userinfo['d'], 'bytes', 'mb')) . 'MB', get_lang('used') => round(convert($userinfo['d'] + $userinfo['u'], 'bytes', 'mb')) . 'MB', get_lang('last_use_time') => date('Y-m-d H:i:s', $userinfo['t']), get_lang('last_reset_time') => date('Y-m-d H:i:s', $userinfo['updated_at']));
 		}
 	}
 	catch (Exception $e) {
@@ -481,4 +483,55 @@ function UnlimitedSocks_AdminServicesTabFields(array $params)
 		return $e->getTraceAsString();
 	}
 }
+
+function multi_language_support(){
+	global $_LANG;
+	$dir = realpath(dirname(__FILE__) . "/lang");
+	if(isset($GLOBALS['CONFIG']['Language']) ){
+		$language = $GLOBALS['CONFIG']['Language'];
+	}
+	if(isset($_SESSION['adminid'])){
+		$language = _getUserLanguage('tbladmins', 'adminid');
+	}elseif( $_SESSION['uid'] ){
+		$language = _getUserLanguage('tblclients', 'uid');
+	}
+	if(!$language){
+		$language = "english";
+	}
+	$file = $dir.'/'.$language.".php";
+	if(file_exists($file)){
+		include($file);
+	}
+	return $file;
+}
+
+function _getUserLanguage($table, $field){
+	$sqlresult = select_query($table, 'language', array( 'id' => mysql_real_escape_string($_SESSION[$field])));
+	if($data = mysql_fetch_row($sqlresult)){
+		return reset($data);
+	}
+	return false;
+}
+
+function get_lang($var){
+	global $_LANG;
+	return isset($_LANG[$var]) ? $_LANG[$var] : $var . '(Missing Language)' ;
+}
 ?>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

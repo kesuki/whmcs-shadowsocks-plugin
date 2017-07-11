@@ -1,5 +1,9 @@
 <?php
-function initialize(array $params)
+if(!defined("WHMCS")){
+  die("This file cannot be accessed directly");
+}
+
+function initialize(array $params , $date = false)
 {
 	$query['RECYCLE'] = 'SELECT `port` FROM `recycle_bin` ORDER BY `created_at` DESC LIMIT 1';
 	$query['DELETE_RECYCLE'] = 'DELETE FROM `recycle_bin` WHERE `port` = :port';
@@ -11,8 +15,15 @@ function initialize(array $params)
 	$query['DELETE_ACCOUNT'] = 'DELETE FROM `user` WHERE `sid` = :sid';
 	$query['CHANGE_PASSWORD'] = 'UPDATE `user` SET passwd = :passwd WHERE `sid` = :sid';
 	$query['USERINFO'] = 'SELECT `id`,`passwd`,`port`,`t`,`u`,`d`,`transfer_enable`,`enable`,`created_at`,`updated_at`,`need_reset`,`sid` FROM `user` WHERE `sid` = :sid';
-	$query['RESET'] = 'UPDATE `user` SET `u`=0,`d`=0 WHERE `sid` = :sid';
 	$query['CHANGE_PACKAGE'] = 'UPDATE `user` SET `transfer_enable` = :transfer_enable WHERE `sid` = :sid';
+	$query['RESETUSERCHART'] = 'delete from `user_usage` where `sid` = :sid';
+	if($date){
+		$query['RESET'] = 'UPDATE `user` SET `u`=0,`d`=0,`updated_at`='.$date.'  WHERE `sid` = :sid';
+		$query['CHARTINFO'] = 'SELECT * FROM `user_usage` WHERE `sid` = :sid AND `date` >= '.$date.' ORDER BY `date` DESC';
+	}else{
+		$query['RESET'] = 'UPDATE `user` SET `u`=0,`d`=0 WHERE `sid` = :sid';
+		$query['CHARTINFO'] = 'SELECT * FROM `user_usage` WHERE `sid` = :sid ORDER BY `date` DESC';
+	}
 	return $query;
 }
 function convert($number, $from, $to)
@@ -54,11 +65,14 @@ function convert($number, $from, $to)
 	}
 	return $number;
 }
-function shadowsocks_MetaData()
+function UnlimitedSocks_MetaData()
 {
-	return array('DisplayName' => 'Shadowsocks for whmcs', 'RequiresServer' => true);
+	return array(
+		'DisplayName' => 'UnlimitedSocks', 
+		'RequiresServer' => true,
+		);
 }
-function shadowsocks_ConfigOptions()
+function UnlimitedSocks_ConfigOptions()
 {
 	return array(
 	'数据库名' => array('Type' => 'text', 'Size' => '25'),
@@ -67,13 +81,12 @@ function shadowsocks_ConfigOptions()
 		'Options'     => array('1' => '需要重置', '0' => '不需要重置'),
 		'Description' => '是否需要重置流量'
 		),
-	'流量限制' => array('Type' => 'text', 'Size' => '25', 'Description' => '单位MB'),
-	'授权密钥' => array('Type' => 'text', 'Size' => '32', 'Description' => '请输入您从购买者手中获取的密钥'),
+	'流量限制' => array('Type' => 'text', 'Size' => '25', 'Description' => '单位MB 自定义流量套餐请勿填写'),
 	'起始端口' => array('Type' => 'text', 'Size' => '25', 'Description' => '如果数据库有记录此项无效'),
-	'线路列表' => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => '格式 xxx|服务器地址|加密方式|协议|混淆| 一行一个')
+	'线路列表' => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => '格式 xxx|服务器地址|加密方式|协议|协议参数|混淆|混淆参数|ss/ssr 一行一个')
 	);
 }
-function shadowsocks_TestConnection(array $params)
+function UnlimitedSocks_TestConnection(array $params)
 {
 	try {
 		$dbhost = $params['serverip'];
@@ -84,13 +97,23 @@ function shadowsocks_TestConnection(array $params)
 		$errorMsg = '';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_TestConnection', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_TestConnection', $params, $e->getMessage(), $e->getTraceAsString());
 		$success = false;
 		$errorMsg = $e->getMessage();
 	}
 	return array('success' => $success, 'error' => $errorMsg);
 }
-function shadowsocks_CreateAccount(array $params)
+function UnlimitedSocks_RandomPass($length = 8)
+{
+	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_ []{}<>~`+=,.;:/?|'; 
+	$password = ''; 
+	for ( $i = 0; $i < $length; $i++ ) 
+	{ 
+		$password .= $chars[ mt_rand(0, strlen($chars) - 1) ]; 
+	} 
+	return $password; 
+}
+function UnlimitedSocks_CreateAccount(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -126,7 +149,8 @@ function shadowsocks_CreateAccount(array $params)
 			}
 		}
 		$create = $db->prepare($query['CREATE_ACCOUNT']);
-		$create->bindValue(':passwd', $params['customfields']['password']);
+		if($params['customfields']['password'] != ""){$pass = $params['customfields']['password'];}else{$pass =UnlimitedSocks_RandomPass();};
+		$create->bindValue(':passwd', $pass);
 		$create->bindValue(':transfer_enable', $bandwidth);
 		$create->bindValue(':port', $port);
 		$create->bindValue(':need_reset', $params['configoption2']);
@@ -147,11 +171,11 @@ function shadowsocks_CreateAccount(array $params)
 		}
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_CreateAccount', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_CreateAccount', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_SuspendAccount(array $params)
+function UnlimitedSocks_SuspendAccount(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -172,11 +196,11 @@ function shadowsocks_SuspendAccount(array $params)
 		return 'success';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_SuspendAccount', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_SuspendAccount', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_UnsuspendAccount(array $params)
+function UnlimitedSocks_UnsuspendAccount(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -197,11 +221,11 @@ function shadowsocks_UnsuspendAccount(array $params)
 		return 'success';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_UnsuspendAccount', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_UnsuspendAccount', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_TerminateAccount(array $params)
+function UnlimitedSocks_TerminateAccount(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -240,11 +264,11 @@ function shadowsocks_TerminateAccount(array $params)
 		return 'success';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_TerminateAccount', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_TerminateAccount', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_ChangePackage(array $params)
+function UnlimitedSocks_ChangePackage(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -265,11 +289,11 @@ function shadowsocks_ChangePackage(array $params)
 		return 'success';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_ChangePackage', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ChangePackage', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_ChangePassword(array $params)
+function UnlimitedSocks_ChangePassword(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -289,17 +313,17 @@ function shadowsocks_ChangePassword(array $params)
 		return 'success';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_ChangePassword', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ChangePassword', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_AdminCustomButtonArray()
+function UnlimitedSocks_AdminCustomButtonArray()
 {
-	return array('Reset' => 'ResetBandwidth');
+	return array('重置流量' => 'ResetBandwidth');
 }
-function shadowsocks_ResetBandwidth(array $params)
+function UnlimitedSocks_ResetBandwidth(array $params)
 {
-	$query = initialize($params);
+	$query = initialize($params,time());
 	try {
 		$dbhost = ($params['serverip']);
 		$dbname = ($params['configoption1']);
@@ -309,6 +333,9 @@ function shadowsocks_ResetBandwidth(array $params)
 		$enable = $db->prepare($query['RESET']);
 		$enable->bindValue(':sid', $params['serviceid']);
 		$todo = $enable->execute();
+		$resetchart = $db->prepare($query['RESETUSERCHART']);
+		$resetchart->bindValue(':sid', $params['serviceid']);
+		$resetchart->execute();
 		if (!$todo) {
 			$error = $db->errorInfo();
 			return $error;
@@ -316,13 +343,22 @@ function shadowsocks_ResetBandwidth(array $params)
 		return 'success';
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_ResetBandwidth', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ResetBandwidth', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
 }
-function shadowsocks_ClientArea(array $params)
+function UnlimitedSocks_ClientArea(array $params)
 {
-	$query = initialize($params);
+	require_once 'Mobile_Detect.php';
+	$detect = new Mobile_Detect;
+	if($detect->isMobile()){
+		$date = time() - 60*60*24;
+		$datadays = 1;
+	}else{
+		$date = time() - 60*60*24*3;
+		$datadays = 3;
+	}
+	$query = initialize($params,$date);
 	try {
 		$dbhost = $params['serverip'];
 		$dbname = $params['configoption1'];
@@ -333,35 +369,97 @@ function shadowsocks_ClientArea(array $params)
 		$usage->bindValue(':sid', $params['serviceid']);
 		$usage->execute();
 		$usage = $usage->fetch();
-		$nodes = $params['configoption6'];
+		
+		$chartinfo = $db->prepare($query['CHARTINFO']);
+		$chartinfo->bindValue(':sid', $params['serviceid']);
+		$chartinfo->execute();
+		if($chartinfo){
+			$exa = array();
+			foreach($chartinfo as $chart){
+				$exa[] = $chart;
+			}
+			$label = "";
+			$total = "";
+			$upload = "";
+			$download = "";
+			$chartinfo = array_reverse($exa,true);
+			foreach($chartinfo as $chart){
+				$label .= "'"."',";
+				//$label .= "'".date('m/d  H:i',$chart['date'])."',";
+				$upload .= number_format(convert($chart['upload'], 'bytes', 'mb'), 2, '.', '').",";
+				$download .= number_format(convert($chart['download'], 'bytes', 'mb'), 2, '.', '').",";
+				$total .= number_format(convert($chart['upload']+$chart['download'], 'bytes', 'mb'), 2, '.', '').",";
+			}
+			$label = substr($label,0,strlen($label)-1);
+			$total = substr($total,0,strlen($total)-1);
+			$upload = substr($upload,0,strlen($upload)-1);
+			$download = substr($download,0,strlen($download)-1);
+			$script = make_script("totalc",$label,$total);
+			$script .= make_script("uploadc",$label,$upload);
+			$script .= make_script("downloadc",$label,$download);
+		}
+		
+		$nodes = $params['configoption5'];
 		$results = array();
-		$node = explode('|', $nodes);
-		$x=0;$count=count($node)-1;
-		while($x <= $count){
-			$results[$x/5][$x%5] = $node[$x];
+		
+		$noder = explode("\n",$nodes);
+		$x = 0;
+		foreach($noder as $nodee){
+			$nodee = explode('|', $nodee);
+			$y = 0;
+			$ress = array();
+			foreach($nodee as $nodet){
+				$ress[$y] = $nodet;
+				$y ++;
+			}
+			$results[$x] = $ress;
 			$x++;
 		}
+		
 		$user = array('passwd' => $usage['passwd'], 'port' => $usage['port'], 'u' => $usage['u'], 'd' => $usage['d'], 't' => $usage['t'], 'sum' => $usage['u'] + $usage['d'], 'transfer_enable' => $usage['transfer_enable'], 'created_at' => $usage['created_at'], 'updated_at' => $usage['updated_at']);
 		if ($usage && $usage['enable']) {
 			return array(
-	'tabOverviewReplacementTemplate' => 'details.tpl',
-	'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results)
-	);
+			'tabOverviewReplacementTemplate' => 'details.tpl',
+			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i:s',time()))
+			);
 		}
 		return array(
-	'tabOverviewReplacementTemplate' => 'error.tpl',
-	'templateVariables'              => array('usefulErrorHelper' => '出现了一些问题，可能您的服务还未开通，请稍后再来试试。')
-	);
+		'tabOverviewReplacementTemplate' => 'error.tpl',
+		'templateVariables'              => array('usefulErrorHelper' => '出现了一些问题，可能您的服务还未开通，请稍后再来试试。')
+		);
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_ClientArea', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ClientArea', $params, $e->getMessage(), $e->getTraceAsString());
 		return array(
 	'tabOverviewReplacementTemplate' => 'error.tpl',
 	'templateVariables'              => array('usefulErrorHelper' => $e->getMessage())
 	);
 	}
 }
-function shadowsocks_AdminServicesTabFields(array $params)
+function make_script($name,$label,$data){
+	if($name and $label and $data){
+		$script = "
+			var canvas=document.getElementById('".$name."');
+			var data = {
+				labels : [".$label."],
+				datasets : [
+					{
+						fillColor : 'rgba(220,220,220,0.5)',
+						strokeColor : 'rgba(220,220,220,1)',
+						pointColor : 'rgba(220,220,220,1)',
+						pointStrokeColor : '#fff',
+						data : [".$data."]
+					},
+				]
+			}
+			var ctx = canvas.getContext('2d');
+			var myLine = new Chart(ctx).Line(data,{
+			responsive: true,
+			scaleLabel: '<%=value%>MB'});";
+		return $script;
+	}
+}
+function UnlimitedSocks_AdminServicesTabFields(array $params)
 {
 	$query = initialize($params);
 	try {
@@ -375,11 +473,11 @@ function shadowsocks_AdminServicesTabFields(array $params)
 		$userinfo->execute();
 		$userinfo = $userinfo->fetch();
 		if ($userinfo) {
-			return array('端口' => $userinfo['port'], '流量' => convert($userinfo['transfer_enable'], 'bytes', 'mb') . 'MB', '上传' => round(convert($userinfo['u'], 'bytes', 'mb')) . 'MB', '下载' => round(convert($userinfo['d'], 'bytes', 'mb')) . 'MB', '已用' => round(convert($userinfo['d'] + $userinfo['u'], 'bytes', 'mb')) . 'MB', '最后使用' => date('Y-m-d H:i:s', $userinfo['t']), '上次重置' => date('Y-m-d H:i:s', $userinfo['updated_at']));
+			return array('端口' => $userinfo['port'], '流量' => convert($userinfo['transfer_enable'], 'bytes', 'mb') . 'MB', '上传' => round(convert($userinfo['u'], 'bytes', 'mb')) . 'MB', '下载' => round(convert($userinfo['d'], 'bytes', 'mb')) . 'MB', '已用' => round(convert($userinfo['d'] + $userinfo['u'], 'bytes', 'mb')) . 'MB', '最后使用' => date('Y-m-d H:i:s', $userinfo['t']), '上次手动重置' => date('Y-m-d H:i:s', $userinfo['updated_at']));
 		}
 	}
 	catch (Exception $e) {
-		logModuleCall('shadowsocks', 'shadowsocks_AdminServicesTabFields', $params, $e->getMessage(), $e->getTraceAsString());
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_AdminServicesTabFields', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getTraceAsString();
 	}
 }

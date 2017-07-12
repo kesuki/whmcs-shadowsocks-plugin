@@ -1,0 +1,108 @@
+body {
+    background-color: #ededed;
+}
+/* font */
+.plugin {
+    font-family: "Microsoft Yahei",Arial;
+    font-size: 14px;
+}
+.plugin .alt.gray-bg {
+    background: #ffffff;
+}
+.plugin .profile-nav .user-heading {
+    color: #fff;
+    border-radius: 4px 4px 0 0;
+    -webkit-border-radius: 4px 4px 0 0;
+    padding: 30px;
+    text-align: center;
+}
+.plugin .profile-nav ul > li > a {
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    color: #89817f;
+}
+.plugin .profile-nav .user-heading a img {
+    width: 112px;
+    height: 112px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+.plugin .user-heading.alt a img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+.plugin .user-heading.alt a {
+    float: left;
+    margin-right: 15px;
+    margin-left: -10px;
+    display: inline-block;
+    border: 5px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    -webkit-border-radius: 50%;
+}
+.plugin .profile-nav .user-heading h1 {
+    font-size: 20px;
+    font-weight: 300;
+    margin-bottom: 5px;
+}
+.plugin .profile-nav .user-heading p {
+    font-size: 16px;
+    color: #8b8b8b;
+    line-height: 25px;
+}
+.plugin .user-heading.alt {
+    display: inline-block;
+    width: 100%;
+    text-align: left;
+}
+.plugin .panel-heading {
+    border-color: #eff2f7;
+    font-size: 14px;
+    font-weight: 400;
+    background: #fafafa;
+    text-transform: uppercase;
+    padding: 15px;
+}
+.plugin .progress-sm,.plugin .progress-xs {
+    height: 10px;
+}
+.plugin .progress {
+    border-radius: 50px;
+    -webkit-border-radius: 50px;
+    box-shadow: none;
+}
+.plugin .table thead > tr > th, .table tbody > tr > th, .table tfoot > tr > th, .table thead > tr > td, .table tbody > tr > td, .table tfoot > tr > td {
+    padding: 10px;
+}
+.plugin .btn-primary {
+    background-color: #1fb5ad;
+    border-color: #1fb5ad;
+    color: #FFFFFF;
+}
+.plugin .badge-primary {
+    background-color: #1fb5ad;
+    color: #FFFFFF;
+}
+.plugin .badge-danger {
+    background-color: #F24A4A;
+    color: #FFFFFF;
+}
+.plugin #qrcode {
+    display: none;
+    width: 300px;
+    position: fixed;
+    top: calc(50% - 300px);
+    left: 50%;
+
+}
+.plugin #qrcode img {
+    width: 100%;
+}
+.plugin a {
+    color: #89817f;
+}
+.table>tbody>tr>td {
+    padding-left: 15px !important;
+}

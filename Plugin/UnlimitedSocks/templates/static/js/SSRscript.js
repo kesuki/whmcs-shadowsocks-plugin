@@ -77,32 +77,39 @@ $(document).ready(function() {
         var _this  = $(this);
         ping.ping('http://' + address,function(data) {
             if(data >= timeout) {
-                _this.parents('td').html('<span class="badge badge-danger">超时</span>');
+                _this.parents('td').html('<span class="badge badge-danger">X</span>');
             } else {
-                _this.parents('td').html('<span class="badge badge-primary">在线</span>');
+                _this.parents('td').html('<span class="badge badge-primary">√</span>');
             }
         },timeout);
     });
 	jQuery(document).ready(function($) {
 		$("button[name='qrcode']").on('click',function() {
 			if($(this).attr('data-type').indexOf("ssr")!=-1){
-				str = base64encode($(this).attr('data-params') + ':' + base64encode($(this).attr('data-pass')));
+				str = $(this).attr('data-params') + base64encode($(this).attr('data-pass')) + '/?obfsparam=' + base64encode($(this).attr('data-obfsparam')) + '&protoparam=' + base64encode($(this).attr('data-protoparam')) +  '&remarks=' + base64encode($(this).attr('data-note')) ;
 			} else {
-				str = base64encode($(this).attr('data-params'));
+				str = $(this).attr('data-params-SS');
 			}
+			str = base64encode(str);
 			str = $(this).attr('data-type') + '://' + str;
-			layer.closeAll();
 			layer.open({
 				type: 1,
-				title: $(this).attr('data-title'),
-				shade: [0.8, '#000'],
-				skin: 'layui-layer-demo',
+				title: $(this).attr('data-type'),
 				offset: 'auto',
 				closeBtn: 1,
-				shift: 2,
 				shadeClose: true,
-				content: '<img style="position: relative; left: 600px; width: 100%; height: 100%;" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/><div style="position: relative;  left: 600px; overflow: auto; text-align: center; margin-bottom: 100px; font-size: 12px;">请使用 Shadowsocks 客户端进行扫描</div>'
+				content: '<img style="position: relative; width: 100%; height: 100%;" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/>'
 			});
+		});
+		$("button[name='url']").on('click',function() {
+			if($(this).attr('data-type').indexOf("ssr")!=-1){
+				str = $(this).attr('data-params') + base64encode($(this).attr('data-pass')) + '/?obfsparam=' + base64encode($(this).attr('data-obfsparam')) + '&protoparam=' + base64encode($(this).attr('data-protoparam')) +  '&remarks=' + base64encode($(this).attr('data-note')) ;
+			} else {
+				str = $(this).attr('data-params-SS');
+			}
+			str = base64encode(str);
+			str = $(this).attr('data-type') + '://' + str;
+			layer.alert(str);
 		});
 	});
 });

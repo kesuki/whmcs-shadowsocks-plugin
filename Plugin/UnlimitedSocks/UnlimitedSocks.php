@@ -151,7 +151,7 @@ function UnlimitedSocks_CreateAccount(array $params){
 				$port = $port['port'] + 1;
 			}
 			else {
-				$port = (!empty($params['configoption5']) ? $params['configoption5'] : '10000');
+				$port = (!empty($params['configoption4']) ? $params['configoption4'] : '10000');
 			}
 		}
 		$create = $db->prepare($query['CREATE_ACCOUNT']);

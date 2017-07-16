@@ -84,7 +84,12 @@ function UnlimitedSocks_ConfigOptions(){
 		),
 	get_lang('bandwidth') => array('Type' => 'text', 'Size' => '25', 'Description' => get_lang('bandwidth_description')),
 	get_lang('start_port') => array('Type' => 'text', 'Size' => '25', 'Description' => get_lang('start_port_description')),
-	get_lang('routelist') => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => get_lang('routelist_description'))
+	get_lang('routelist') => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => get_lang('routelist_description')),
+	get_lang('ping_test') => array(
+		'Type'        => 'dropdown',
+		'Options'     => array('2' => get_lang('test_user'), '1' => get_lang('test_server'), '0' => get_lang('do_not_test')),
+		'Description' => get_lang('ping_test_description')
+		),
 	);
 }
 
@@ -127,7 +132,7 @@ function UnlimitedSocks_CreateAccount(array $params){
 		$already->bindValue(':sid', $params['serviceid']);
 		$already->execute();
 		if ($already->fetchColumn()) {
-			return 'User already exists.';
+			return get_lang('User_already_exists');
 		}
 		$bandwidth = (!empty($params['configoption3']) ? convert($params['configoption3'], 'mb', 'bytes') : (!empty($params['configoptions']['traffic']) ? convert($params['configoptions']['traffic'], 'gb', 'bytes') : '1099511627776'));
 
@@ -146,7 +151,7 @@ function UnlimitedSocks_CreateAccount(array $params){
 				$port = $port['port'] + 1;
 			}
 			else {
-				$port = (!empty($params['configoption5']) ? $params['configoption5'] : '10000');
+				$port = (!empty($params['configoption4']) ? $params['configoption4'] : '10000');
 			}
 		}
 		$create = $db->prepare($query['CREATE_ACCOUNT']);
@@ -173,7 +178,7 @@ function UnlimitedSocks_CreateAccount(array $params){
 	}
 	catch (Exception $e) {
 		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_CreateAccount', $params, $e->getMessage(), $e->getTraceAsString());
-		return $e->getMessage();
+		return get_lang('Model_error').$e->getMessage();
 	}
 }
 
@@ -252,7 +257,7 @@ function UnlimitedSocks_TerminateAccount(array $params){
 			}
 		}
 		else {
-			return 'User does not exists.';
+			return get_lang('User_does_not_exists');
 		}
 		$enable = $db->prepare($query['DELETE_ACCOUNT']);
 		$enable->bindValue(':sid', $params['serviceid']);
@@ -402,6 +407,8 @@ function UnlimitedSocks_ClientArea(array $params){
 		
 		$nodes = $params['configoption5'];
 		$results = array();
+		$pingresults = array();
+		$z = 0;
 		
 		$noder = explode("\n",$nodes);
 		$x = 0;
@@ -412,6 +419,11 @@ function UnlimitedSocks_ClientArea(array $params){
 			foreach($nodee as $nodet){
 				$ress[$y] = $nodet;
 				$y ++;
+				if($y == 2 and !$detect->isMobile() and $params['configoption6'] == 1){
+					$res = ping_Server($nodet,$usage['port']);
+					$pingresults[$z] = $res;
+					$z ++;
+				}
 			}
 			$results[$x] = $ress;
 			$x++;
@@ -421,7 +433,7 @@ function UnlimitedSocks_ClientArea(array $params){
 		if ($usage && $usage['enable']) {
 			return array(
 			'tabOverviewReplacementTemplate' => 'details.tpl',
-			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i',time()))
+			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i',time()),'pings' =>$pingresults,'pingoption' => $params['configoption6'])
 			);
 		}
 		return array(
@@ -433,7 +445,7 @@ function UnlimitedSocks_ClientArea(array $params){
 		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ClientArea', $params, $e->getMessage(), $e->getTraceAsString());
 		return array(
 	'tabOverviewReplacementTemplate' => 'error.tpl',
-	'templateVariables'              => array('usefulErrorHelper' => $e->getMessage())
+	'templateVariables'              => array('usefulErrorHelper' => get_lang('Model_error').$e->getMessage())
 	);
 	}
 }
@@ -516,6 +528,25 @@ function _getUserLanguage($table, $field){
 function get_lang($var){
 	global $_LANG;
 	return isset($_LANG[$var]) ? $_LANG[$var] : $var . '(Missing Language)' ;
+}
+
+function ping_Server($host,$port) {
+	$time_start = microtime_float();
+	$ip = gethostbyname($host);
+	$fp = @fsockopen($host,$port,$errno,$errstr,1);
+	if(!$fp) return 'Request timed out.'."\r\n";
+	$get = "GET / HTTP/1.1\r\nHost:".$host."\r\nConnection: Close\r\n\r\n";
+	@fputs($fp,$get);
+	@fclose($fp);
+	$time_end = microtime_float();
+	$time = $time_end - $time_start;
+	$time = ceil($time * 1000);
+	return $time;
+}
+
+function microtime_float(){
+	list($usec, $sec) = explode(" ", microtime());
+	return ((float)$usec + (float)$sec);
 }
 ?>
 

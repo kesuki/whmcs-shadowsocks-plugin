@@ -24,7 +24,6 @@ $_LANG['connect_type'] = "Type";
 $_LANG['method'] = "Method";
 $_LANG['address'] = "Address";
 $_LANG['test'] = "Test";
-$_LANG['ping_test'] = "PING Test";
 $_LANG['show_QRcode'] = "Show QRcode";
 $_LANG['show_URL'] = "Show URL";
 $_LANG['traffic_chart'] = "Traffic Chart";
@@ -48,3 +47,14 @@ $_LANG['bandwidth_description'] = "MB Leave blank for custom bandwidth";
 $_LANG['start_port_description'] = "useless when exist in database";
 $_LANG['routelist_description'] = "name|address|method|protocol|protocol parameters|obfuscation|obfuscation parameters|ss/ssr Each row for one route";
 
+//Other
+$_LANG['User_does_not_exists'] = "Model Error:User does not exists";
+$_LANG['Model_error'] = "Model Error";
+$_LANG['User_already_exists'] = "Model Error:User already exists";
+
+//PingTest
+$_LANG['ping_test'] = "PING Test";
+$_LANG['test_user'] = "User Test";
+$_LANG['test_server'] = "Server Test";
+$_LANG['do_not_test'] = "Do Not Test";
+$_LANG['ping_test_description'] = "Ping Test options";

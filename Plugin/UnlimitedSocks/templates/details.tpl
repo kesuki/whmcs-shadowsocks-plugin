@@ -52,11 +52,6 @@ background-color: rgba(0, 0, 0, .3);
                         <li><a href="javascript:;"> <i class="fa fa-spinner"></i> {$LANG.clientareahostingnextduedate} : {$nextduedate} {$LANG.orderbillingcycle}({$billingcycle}) </a></li>
                         <li><a href="javascript:;"> <i class="fa fa-check-square-o"></i> {$LANG.clientareastatus} : {$status} </a></li>
 						<li><a href="javascript:;"> <i class="fa fa-check-square-o"></i> {get_lang('data_update_at')} : {$nowdate} </a></li>
-                        {foreach from=$productcustomfields item=customfield}
-							{if ($customfield.rawvalue)}
-								<li><a href="javascript:;"> <i class="fa fa-file-text"></i> {$customfield.name} : {$customfield.rawvalue} </a></li>
-							{/if}
-						{/foreach}
                     </ul>
                 </section>
             </aside>
@@ -129,11 +124,14 @@ background-color: rgba(0, 0, 0, .3);
 								<th class="hidden-xs hidden-sm">{get_lang('connect_type')}</th>
                                 <th>{get_lang('address')}</th>
                                 <th>{get_lang('method')}</th>
-								<th class="hidden-xs hidden-sm">{get_lang('test')}</th>
+								{if ($pingoption != 0)}
+									<th class="hidden-xs hidden-sm">{get_lang('test')}</th>
+								{/if}
                                 <th>{get_lang('action')}</th>
                             </tr>
                         </thead>
                         <tbody>
+							{$yy = 0}
                             {foreach $nodes as $node }
                             <tr>
                                 <td>{$node[0]}</td>
@@ -141,9 +139,17 @@ background-color: rgba(0, 0, 0, .3);
                                 <td>{$node[1]}</td>
                                 <td>{$node[2]}</td>
 								<td class="hidden-xs hidden-sm">
-									<button name="ping" class="btn btn-primary btn-xs" >
-                                        {get_lang('ping_test')}
-                                    </button></td>
+									{if ($pingoption == 1)}
+										<button class="btn btn-primary btn-xs" >
+											{$pings[$yy]}
+										</button>
+									{/if}
+									{if ($pingoption == 2)}
+										<button name="ping" class="btn btn-primary btn-xs" >
+											{get_lang('ping_test')}
+										</button>
+									{/if}
+								</td>	
                                 <td data-hook="action">
                                     <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]}" data-params="{$node[1]}:{$usage.port}:{$node[3]}:{$node[2]}:{$node[5]}:" data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}" data-pass="{$usage.passwd}" data-obfsparam="{$node[4]}" data-protoparam="{$node[6]}" data-note="{$node[0]}">
                                         <i class="fa fa-qrcode"></i>
@@ -154,7 +160,7 @@ background-color: rgba(0, 0, 0, .3);
                                         <i class="fa fa-qrcode"></i>
                                         {get_lang('show_URL')}
                                     </button>
-									
+									{$yy = $yy + 1}
                                 </td>
                             </tr>
                             {/foreach}

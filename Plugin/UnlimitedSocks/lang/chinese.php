@@ -54,7 +54,7 @@ $_LANG['User_already_exists'] = "模块错误:用户已存在";
 
 //Ping测试
 $_LANG['ping_test'] = "PING测试";
-$_LANG['test_user'] = "用户测试";
+$_LANG['test_user'] = "用户测试(需要HTTP)";
 $_LANG['test_server'] = "服务器测试";
 $_LANG['do_not_test'] = "不要测试";
 $_LANG['ping_test_description'] = "Ping测试选项";

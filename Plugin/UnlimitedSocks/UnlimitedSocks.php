@@ -417,6 +417,9 @@ function UnlimitedSocks_ClientArea(array $params){
 			$y = 0;
 			$ress = array();
 			foreach($nodee as $nodet){
+				if($y == 0){
+					$nodet = base64_encode($nodet);
+				}
 				$ress[$y] = $nodet;
 				$y ++;
 				if($y == 2 and !$detect->isMobile() and $params['configoption6'] == 1){

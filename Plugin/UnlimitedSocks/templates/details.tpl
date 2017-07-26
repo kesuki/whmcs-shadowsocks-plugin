@@ -134,7 +134,7 @@ background-color: rgba(0, 0, 0, .3);
 							{$yy = 0}
                             {foreach $nodes as $node }
                             <tr>
-                                <td>{$node[0]}</td>
+                                <td>{base64_decode($node[0])}</td>
 								<td class="hidden-xs hidden-sm">{$node[7]}</td>
                                 <td>{$node[1]}</td>
                                 <td>{$node[2]}</td>

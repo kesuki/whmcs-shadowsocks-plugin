@@ -54,7 +54,7 @@ $_LANG['User_already_exists'] = "Model Error:User already exists";
 
 //PingTest
 $_LANG['ping_test'] = "PING Test";
-$_LANG['test_user'] = "User Test";
+$_LANG['test_user'] = "User Test(HTTP Request)";
 $_LANG['test_server'] = "Server Test";
 $_LANG['do_not_test'] = "Do Not Test";
 $_LANG['ping_test_description'] = "Ping Test options";

@@ -417,9 +417,6 @@ function UnlimitedSocks_ClientArea(array $params){
 			$y = 0;
 			$ress = array();
 			foreach($nodee as $nodet){
-				if($y == 0){
-					$nodet = base64_encode($nodet);
-				}
 				$ress[$y] = $nodet;
 				$y ++;
 				if($y == 2 and !$detect->isMobile() and $params['configoption6'] == 1){
@@ -428,7 +425,8 @@ function UnlimitedSocks_ClientArea(array $params){
 					$z ++;
 				}
 			}
-			$results[$x] = $ress;
+			$b64 = makeb64($ress,$usage['port'],$usage['passwd']);
+			$results[$x] = $b64;
 			$x++;
 		}
 		
@@ -550,6 +548,51 @@ function ping_Server($host,$port) {
 function microtime_float(){
 	list($usec, $sec) = explode(" ", microtime());
 	return ((float)$usec + (float)$sec);
+}
+
+function makeb64($node,$port,$pass){
+	//ssr ip:port:protocol:method:obfs:b64pass/?obfsparam=xxx&protoparam=xxx&remarks=xxx
+	//ss data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}"
+	//0 remark
+	//1 ip
+	//2 method
+	//3 protocol
+	//4 protocolparam
+	//5 obfs
+	//6 obfsparam
+	//7 type
+	
+	if(strstr($node[7], 'ssr')){
+		$ssrs = "";
+		$ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".base64_encode($pass);
+		if($node[0] or $node[4] or $node[6]){
+			$ssrs .= "/?";
+			$h = false;
+			if($node[0]){
+				$h = true;
+				$ssrs .= "remarks=".base64_encode($node[0]);
+			}
+			if($node[4]){
+				if($h) $ssrs .= "&";
+				$h = true;
+				$ssrs .= "obfsparam=".base64_encode($node[4]);
+			}
+			if($node[6]){
+				if($h) $ssrs .= "&";
+				$h = true;
+				$ssrs .= "protoparam=".base64_encode($node[6]);
+			}
+			$node[] = "ssr://".base64_encode($ssrs);
+		}
+	}else{
+		$sss = $node[2].":".$pass."@".$node[1].":".$port;
+		$sss = "ss://".base64_encode($sss);
+		if($node[0]){
+			$sss .= "#".$node[0];
+		}
+		$node[] = $sss;
+	}
+	return $node;
 }
 ?>
 

@@ -75,13 +75,8 @@ $(document).ready(function() {
     });
 	jQuery(document).ready(function($) {
 		$("button[name='qrcode']").on('click',function() {
-			if($(this).attr('data-type').indexOf("ssr")!=-1){
-				str = $(this).attr('data-params') + base64encode($(this).attr('data-pass')) + '/?obfsparam=' + base64encode($(this).attr('data-obfsparam')) + '&protoparam=' + base64encode($(this).attr('data-protoparam')) +  '&remarks=' + $(this).attr('data-note') ;
-			} else {
-				str = $(this).attr('data-params-SS');
-			}
-			str = base64encode(str);
-			str = $(this).attr('data-type') + '://' + str;
+			str = $(this).attr('data-params');
+			str = encodeURI(str);
 			layer.open({
 				type: 1,
 				title: $(this).attr('data-type'),
@@ -92,15 +87,7 @@ $(document).ready(function() {
 			});
 		});
 		$("button[name='url']").on('click',function() {
-			if($(this).attr('data-type').indexOf("ssr")!=-1){
-				str = $(this).attr('data-params') + base64encode($(this).attr('data-pass')) + '/?obfsparam=' + base64encode($(this).attr('data-obfsparam')) + '&protoparam=' + base64encode($(this).attr('data-protoparam')) +  '&remarks=' + $(this).attr('data-note') ;
-				str = base64encode(str);
-				str = 'ssr://' + str;
-			} else {
-				str = $(this).attr('data-params-SS');
-				str = base64encode(str);
-				str = 'ss://' + str;
-			}
+			str = $(this).attr('data-params');
 			layer.alert(str);
 		});
 	});

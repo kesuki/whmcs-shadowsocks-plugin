@@ -134,7 +134,7 @@ background-color: rgba(0, 0, 0, .3);
 							{$yy = 0}
                             {foreach $nodes as $node }
                             <tr>
-                                <td>{base64_decode($node[0])}</td>
+                                <td>{$node[0]}</td>
 								<td class="hidden-xs hidden-sm">{$node[7]}</td>
                                 <td>{$node[1]}</td>
                                 <td>{$node[2]}</td>
@@ -151,12 +151,11 @@ background-color: rgba(0, 0, 0, .3);
 									{/if}
 								</td>	
                                 <td data-hook="action">
-                                    <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]}" data-params="{$node[1]}:{$usage.port}:{$node[3]}:{$node[2]}:{$node[5]}:" data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}" data-pass="{$usage.passwd}" data-obfsparam="{$node[4]}" data-protoparam="{$node[6]}" data-note="{$node[0]}">
+                                    <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
                                         <i class="fa fa-qrcode"></i>
                                         {get_lang('show_QRcode')}
                                     </button>
-									<button name="url" class="btn btn-primary btn-xs" data-type="{$node[7]}" data-params="{$node[1]|trim}:{$usage.port}:{$nodes[0][3]|trim}:{$node[2]|trim}:{$nodes[0][5]|trim}:" data-pass="{$usage.passwd}" data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}" data-obfsparam="{$node[4]|trim}"
-									data-protoparam="{$node[6]|trim}" data-note="{$node[0]|trim}">
+									<button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
                                         <i class="fa fa-qrcode"></i>
                                         {get_lang('show_URL')}
                                     </button>

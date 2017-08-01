@@ -143,18 +143,20 @@ background-color: rgba(0, 0, 0, .3);
                                 <td>{$node[2]}</td>
                                 <td class="hidden-xs hidden-sm">{$node[3]}</td>
                                 <td class="hidden-xs hidden-sm">{$node[5]}</td>
-								<td class="hidden-xs hidden-sm">
-									{if ($pingoption == 1)}
+								{if ($pingoption == 1)}
+									<td class="hidden-xs hidden-sm">
 										<button class="btn btn-primary btn-xs" >
 											{$pings[$yy]}
 										</button>
-									{/if}
-									{if ($pingoption == 2)}
+									</td>	
+								{/if}
+								{if ($pingoption == 2)}
+									<td class="hidden-xs hidden-sm">
 										<button name="ping" class="btn btn-primary btn-xs" >
 											{get_lang('ping_test')}
 										</button>
-									{/if}
-								</td>	
+									</td>
+								{/if}
                                 <td data-hook="action">
                                     <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
                                         <i class="fa fa-qrcode"></i>

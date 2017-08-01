@@ -90,6 +90,7 @@ function UnlimitedSocks_ConfigOptions(){
 		'Options'     => array('2' => get_lang('test_user'), '1' => get_lang('test_server'), '0' => get_lang('do_not_test')),
 		'Description' => get_lang('ping_test_description')
 		),
+	get_lang('announcements') => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => get_lang('announcements_description')),	
 	);
 }
 
@@ -440,11 +441,12 @@ function UnlimitedSocks_ClientArea(array $params){
 			$x++;
 		}
 		
+		$infos = $params['configoption7'] ? $params['configoption7'] : false;
 		$user = array('passwd' => $usage['passwd'], 'port' => $usage['port'], 'u' => $usage['u'], 'd' => $usage['d'], 't' => $usage['t'], 'sum' => $usage['u'] + $usage['d'], 'transfer_enable' => $usage['transfer_enable'], 'created_at' => $usage['created_at'], 'updated_at' => $usage['updated_at']);
 		if ($usage && $usage['enable']) {
 			return array(
 			'tabOverviewReplacementTemplate' => 'details.tpl',
-			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i',time()),'pings' =>$pingresults,'pingoption' => $params['configoption6'])
+			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i',time()),'pings' =>$pingresults,'pingoption' => $params['configoption6'] ,'infos' => $infos)
 			);
 		}
 		return array(

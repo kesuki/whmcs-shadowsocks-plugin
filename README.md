@@ -6,6 +6,7 @@
 * fixed utf-8 error|修复中文备注乱码问题
 * Rewrite band reset functon|重写流量清空定时任务
 * Added bandreset when unsuspend account|新增账户解除暂停时自动清空流量
+* Added Announcements Support|加入公告信息支持
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~
@@ -31,6 +32,10 @@
 ## Other
 # More Info in|更多详情请访问 http://www.mak-blog.com/whmcs-shadowsocks-plugin.html
 # 或者 http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/ 密码 Zzm317!
+
+# Paypal Dnoate|Paypal捐赠 zzm317@outlook.com
+# Alipay Donate|支付宝捐赠 admin@fdtmc.tk
+# 捐赠我让我从每顿2元的红烧牛肉面换成吃4元的合味道吧(
 
 * BTW I think a developer's most important ability is to obey the Open-Source Rules
 * Not the coding level he can achieve

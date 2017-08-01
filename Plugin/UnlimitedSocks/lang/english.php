@@ -42,11 +42,12 @@ $_LANG['start_port'] = "Start Port";
 $_LANG['routelist'] = "Routes";
 $_LANG['need_reset'] = "need";
 $_LANG['neednot_reset'] = "neednot";
+$_LANG['announcements'] = "announcements";
 $_LANG['resetbandwidth_description'] = "need reset bandwidth or not";
 $_LANG['bandwidth_description'] = "MB Leave blank for custom bandwidth";
 $_LANG['start_port_description'] = "useless when exist in database";
 $_LANG['routelist_description'] = "name|address|method|protocol|protocol parameters|obfuscation|obfuscation parameters|ss/ssr Each row for one route";
-
+$_LANG['announcements_description'] = "Write your announcements(new line </br>)";
 //Other
 $_LANG['User_does_not_exists'] = "Model Error:User does not exists";
 $_LANG['Model_error'] = "Model Error";

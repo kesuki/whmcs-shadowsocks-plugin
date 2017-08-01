@@ -39,6 +39,11 @@ background-color: rgba(0, 0, 0, .3);
 	background-image: linear-gradient(0deg, rgba(255,255,255,.5), #fff);
 }
 </style>
+{if ($infos)}
+	<div class="alert alert-success">
+		<p>{$infos}</p>
+	</div>
+{/if}
 <div class="plugin">
     <div class="row">
         <div class="col-md-12">
@@ -66,8 +71,6 @@ background-color: rgba(0, 0, 0, .3);
                             <tr>
                                 <th>{get_lang('port')}</th>
                                 <th>{get_lang('password')}</th>
-                                <th>{get_lang('protocol')}</th>
-                                <th>{get_lang('obfuscation')}</th>
                                 <th class="hidden-xs hidden-sm">{get_lang('created_at')}</th>
                                 <th class="hidden-sm hidden-xs">{get_lang('last_use_time')}</th>
                             </tr>
@@ -76,8 +79,6 @@ background-color: rgba(0, 0, 0, .3);
                             <tr>
                                 <td>{$usage.port}</td>
                                 <td>{$usage.passwd}</td>
-                                <td>{$nodes[0][3]}</td>
-                                <td>{$nodes[0][5]}</td>
                                 <td class="hidden-xs hidden-sm">{$usage.created_at|date_format:'%Y-%m-%d %H:%M:%S'}</td>
                                 <td class="hidden-sm hidden-xs">{$usage.t|date_format:'%Y-%m-%d %H:%M:%S'}</td>
                             </tr>
@@ -124,6 +125,8 @@ background-color: rgba(0, 0, 0, .3);
 								<th class="hidden-xs hidden-sm">{get_lang('connect_type')}</th>
                                 <th>{get_lang('address')}</th>
                                 <th>{get_lang('method')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('protocol')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('obfuscation')}</th>
 								{if ($pingoption != 0)}
 									<th class="hidden-xs hidden-sm">{get_lang('test')}</th>
 								{/if}
@@ -138,6 +141,8 @@ background-color: rgba(0, 0, 0, .3);
 								<td class="hidden-xs hidden-sm">{$node[7]}</td>
                                 <td>{$node[1]}</td>
                                 <td>{$node[2]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[3]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[5]}</td>
 								<td class="hidden-xs hidden-sm">
 									{if ($pingoption == 1)}
 										<button class="btn btn-primary btn-xs" >

@@ -208,7 +208,7 @@ function UnlimitedSocks_SuspendAccount(array $params){
 }
 
 function UnlimitedSocks_UnsuspendAccount(array $params){
-	$query = initialize($params);
+	$query = initialize($params,time());
 	try {
 		$dbhost = $params['serverip'];
 		$dbname = $params['configoption1'];
@@ -218,8 +218,18 @@ function UnlimitedSocks_UnsuspendAccount(array $params){
 		$enable = $db->prepare($query['ENABLE']);
 		$enable->bindValue(':enable', '1');
 		$enable->bindValue(':sid', $params['serviceid']);
-		
+	
 		$todo = $enable->execute();
+		if (!$todo) {
+			$error = $db->errorInfo();
+			return $error;
+		}
+		$enable = $db->prepare($query['RESET']);
+		$enable->bindValue(':sid', $params['serviceid']);
+		$todo = $enable->execute();
+		$resetchart = $db->prepare($query['RESETUSERCHART']);
+		$resetchart->bindValue(':sid', $params['serviceid']);
+		$resetchart->execute();
 		if (!$todo) {
 			$error = $db->errorInfo();
 			return $error;

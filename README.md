@@ -4,6 +4,8 @@
 * fixed QRcode support for ssr|已修复二维码支持
 * added traffic chart support|添加用户流量图表
 * fixed utf-8 error|修复中文备注乱码问题
+* Rewrite band reset functon|重写流量清空定时任务
+* Added bandreset when unsuspend account|新增账户解除暂停时自动清空流量
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~

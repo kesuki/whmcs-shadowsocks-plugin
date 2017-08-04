@@ -16,5 +16,7 @@
 <script src="<?echo(get_web_path());?>/assets/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
 <script src="<?echo(get_web_path());?>/assets/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <script src="<?echo(get_web_path());?>/assets/bower_components/chart.js/Chart.js"></script>
+<script src="<?echo(get_web_path());?>/assets/bower_components/layer.js/layer.js"></script>
+<script src="<?echo(get_web_path());?>/script.js"></script>
 </body>
 </html>

@@ -72,7 +72,7 @@
                     <th class="hidden-xs hidden-sm">Status</th>
                     <th class="hidden-xs hidden-sm">Server</th>
 					<th>Amount</th>
-					<th class="hidden-xs hidden-sm">Billingcycle</th>
+					<th class="hidden-xs hidden-sm">Port</th>
 					<th>Duedate</th>
 					<th>Action</th>
                   </tr>
@@ -82,7 +82,7 @@
 						$x = 0;
 						$products = array_reverse($data['products'],true);
 						foreach($products as $product){
-							if($x <= 6){
+							//if($x <= 6){
 								?>
 									<tr>
 										<td><a href=""><?echo($product['id'])?></a></td>
@@ -92,14 +92,19 @@
 										  <div class="sparkbar" data-color="#00a65a" data-height="20"><?echo($product['servername'])?></div>
 										</td>
 										<td><?echo($product['recurringamount'])?></td>
-										<td class="hidden-xs hidden-sm"><?echo($product['billingcycle'])?></td>
+										<td class="hidden-xs hidden-sm"><?echo($product['message'][0])?></td>
 										<td><?echo($product['nextduedate'])?></td>
-										<td>Manage</td>
+										<td>
+											<button name="Manager" class="btn btn-primary btn-xs" data-type="Info" data-id="<?echo $product['id']?>">
+											<i class="fa fa-qrcode"></i>
+												Manage
+											</button>
+										</td>
 									</tr>
 								<?
 							}
 							$x ++;
-						}
+						//}
 					?>
 					  
                   </tbody>

@@ -67,7 +67,7 @@
                 <table class="table no-margin">
                   <thead>
                   <tr>
-                    <th>Order ID</th>
+                    <th>Service ID</th>
                     <th>Item</th>
                     <th class="hidden-xs hidden-sm">Status</th>
                     <th class="hidden-xs hidden-sm">Server</th>

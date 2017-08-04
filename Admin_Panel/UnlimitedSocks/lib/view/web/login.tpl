@@ -28,11 +28,11 @@
 				  <input type="submit" value="Submit" />
 				</form>
             </div>
-			
-			<div class="alert alert-danger">
-				<?echo($data);?>
-			</div>
-			
+			<?if($data){?>
+				<div class="alert alert-danger">
+					<?echo($data);?>
+				</div>
+			<?}?>
 			
           </div>
 	    </div>  

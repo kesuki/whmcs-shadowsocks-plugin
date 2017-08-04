@@ -9,9 +9,9 @@ function admin_login($POST){
 	$result = json_decode(API_call($array),true);
 	if($result['result'] == 'success' && isset($result['adminid']) && isset($result['name'])){
 		admin_logined($POST['username'],md5($POST['password']),$result);
-		return true;
+		return "success";
 	}
-	return false;
+	return $result['message'];
 }
 
 function admin_logined($user,$md5pass,$res){

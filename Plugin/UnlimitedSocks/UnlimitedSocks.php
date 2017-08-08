@@ -576,25 +576,28 @@ function makeb64($node,$port,$pass){
 	
 	if(strstr($node[7], 'ssr')){
 		$ssrs = "";
-		$ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".base64_encode($pass);
+        $pass = str_replace('=','',base64_encode($pass));
+		$ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
 		if($node[0] or $node[4] or $node[6]){
 			$ssrs .= "/?";
-			$h = false;
+            $ssrs .= "obfsparam=";
+            if($node[4]){
+                $data = str_replace('=','',base64_encode($node[4]));
+				$ssrs .= $data;
+			}
+            $ssrs .= "&protoparam=";
+            if($node[6]){
+                $data = str_replace('=','',base64_encode($node[6]));
+				$ssrs .= $data;
+			}
+            $ssrs .= "&remarks=";
 			if($node[0]){
-				$h = true;
-				$ssrs .= "remarks=".base64_encode($node[0]);
+                $data = str_replace('=','',base64_encode($node[0]));
+				$ssrs .= $data;
 			}
-			if($node[4]){
-				if($h) $ssrs .= "&";
-				$h = true;
-				$ssrs .= "obfsparam=".base64_encode($node[4]);
-			}
-			if($node[6]){
-				if($h) $ssrs .= "&";
-				$h = true;
-				$ssrs .= "protoparam=".base64_encode($node[6]);
-			}
-			$node[] = "ssr://".base64_encode($ssrs);
+            $data = base64_encode($ssrs);
+            $data = str_replace('=','',$data);
+			$node[] = "ssr://".$data;
 		}
 	}else{
 		$sss = $node[2].":".$pass."@".$node[1].":".$port;

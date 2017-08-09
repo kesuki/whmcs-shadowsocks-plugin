@@ -1,5 +1,9 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
+
+## Admin-Panel has been moved to another project|Admin-panel已转移到其他项目
+## https://github.com/zzm317/Unlimited-Socks-AdminPanel
+
 * based on https://github.com/kesuki/whmcs-shadowsocks-plugin which is based on frankwei's project
 * fixed QRcode support for ssr|已修复二维码支持
 * added traffic chart support|添加用户流量图表

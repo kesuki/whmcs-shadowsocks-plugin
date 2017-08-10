@@ -83,7 +83,7 @@ $(document).ready(function() {
 				offset: 'auto',
 				closeBtn: 1,
 				shadeClose: true,
-				content: '<img style="position: relative; width: 100%; height: 100%;" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/>'
+				content: '<img style="position: relative; width: 100%; height: 100%;" src="https://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/>'
 			});
 		});
 		$("button[name='url']").on('click',function() {

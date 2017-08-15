@@ -65,7 +65,7 @@ function daysInmonth($year='',$month=''){
 }  
 
 function resetd($id){
-    resetband($sid); 
+    resetband($id); 
 }
 
 $products = json_decode(get_client_products(),true);

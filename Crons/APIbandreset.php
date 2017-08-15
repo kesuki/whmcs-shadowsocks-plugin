@@ -46,16 +46,43 @@ function resetband($id){
 	}
 }
 
+function daysInmonth($year='',$month=''){  
+    if(empty($year)) $year = date('Y');  
+    if(empty($month)) $month = date('m');  
+    if (in_array($month, array(1, 3, 5, 7, 8, '01', '03', '05', '07', '08', 10, 12))) {    
+            $text = '31';        //月大  
+    }elseif ($month == 2 || $month == '02'){    
+        if ( ($year % 400 == 0) || ( ($year % 4 == 0) && ($year % 100 !== 0) ) ) {   //判断是否是闰年    
+            $text = '29';        //闰年2月  
+        } else {    
+            $text = '28';        //平年2月  
+        }    
+    } else {    
+        $text = '30';            //月小  
+    }  
+      
+    return $text;  
+}  
+
+function resetd($id){
+    resetband($sid); 
+}
+
 $products = json_decode(get_client_products(),true);
 if($products['result'] == "success"){
 	$products = $products['products']['product'];
 	$product = array();
 	foreach($products as $pro){
-		if(strtotime($pro['nextduedate']) >= time()){//out of date or not|判断是否过期
-			if(date("d", strtotime($pro['nextduedate'])) == date('d')){
-				$sid = $pro['id'];
-				resetband($sid);
-			}
+        if($pro['status'] == "Active"){
+            $days = daysInmonth(date('y'),date('m'));
+            if(date("d", strtotime($pro['nextduedate'])) == date('d')){
+                resetd($pro['id']);
+            }
+            if(date('d') == $days){
+                if(date("d", strtotime($pro['nextduedate'])) > $days){
+                    resetd($pro['id']);
+                } 
+            }
 		}
 	}
 }else{

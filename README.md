@@ -1,6 +1,8 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
 
+## AdditionalBandwidth 40%|额外流量包进度 40%
+
 ## Admin-Panel has been moved to another project|Admin-panel已转移到其他项目
 ## https://github.com/zzm317/Unlimited-Socks-AdminPanel
 
@@ -11,6 +13,7 @@
 * Rewrite band reset functon|重写流量清空定时任务
 * Added bandreset when unsuspend account|新增账户解除暂停时自动清空流量
 * Added Announcements Support|加入公告信息支持
+* Fix The Bug of APIBandreset|修正APIBandreset的时间bug
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~
@@ -19,8 +22,7 @@
 * ~~Add SS/SSR switch function|添加SS/SSR切换支持~~
 * ~~Add Ping Test switch function|添加PING测试选项切换支持~~
 * ~~Add Random Password Support|添加随机密码支持~~
-* Add additional bandwidth|添加额外流量包功能
-* Add Admin Dashboard|添加管理员面板(40%Progess|进程40%)
+* Add additional bandwidth|添加额外流量包功能(40%Progess|进程40%)
 
 ## Attentions
 * You must add a server and select it in Product->Module Settings|请添加服务器并在产品->模块设置中选择服务器
@@ -35,11 +37,10 @@
 
 ## Other
 # More Info in|更多详情请访问 http://www.mak-blog.com/whmcs-shadowsocks-plugin.html
-# 或者 http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/ 密码 Zzm317!
+# 或者 http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/
 
 # Paypal Dnoate|Paypal捐赠 zzm317@outlook.com
 # Alipay Donate|支付宝捐赠 admin@fdtmc.tk
-# 捐赠我让我从每顿2元的红烧牛肉面换成吃4元的合味道吧(
 
 * BTW I think a developer's most important ability is to obey the Open-Source Rules
 * Not the coding level he can achieve

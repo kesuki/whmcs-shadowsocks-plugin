@@ -33,7 +33,7 @@
 # More Info in|更多详情请访问 http://www.mak-blog.com/whmcs-shadowsocks-plugin.html
 # 或者 http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/
 
-# Paypal Dnoate|Paypal捐赠 zzm317@outlook.com
+# Paypal Donate|Paypal捐赠 zzm317@outlook.com
 # Alipay Donate|支付宝捐赠 admin@fdtmc.tk
 
 * BTW I think a developer's most important ability is to obey the Open-Source Rules

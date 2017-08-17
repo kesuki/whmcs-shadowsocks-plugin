@@ -174,6 +174,62 @@ background-color: rgba(0, 0, 0, .3);
                     </table>
                 </div>
             </section>
+            
+            {if ($usingcards)}
+                <section class="panel">
+                    <header class="panel-heading">
+                        {get_lang('card_info')}
+                    </header>
+                    <div class="panel-body table-container">
+                        <table class="table general-table">
+                            <thead>
+                                <tr>
+                                    <th>{get_lang('bandwidth')}</th>
+                                    <th>{get_lang('duedate')}</th>
+                                    <th class="hidden-xs hidden-sm">{get_lang('card_number')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $usingcards as $usedcard}
+                                <tr>
+                                    <td>{$usedcard['traffic']}</td>
+                                    <td>{$usedcard['duedate']}</td>
+                                    <td class="hidden-xs hidden-sm">{$usedcard['card']}</td>
+                                </tr>
+                            {/foreach}    
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {/if}
+            
+            {if ($usedcards)}
+                <section class="panel">
+                    <header class="panel-heading">
+                        {get_lang('used_card_info')}
+                    </header>
+                    <div class="panel-body table-container">
+                        <table class="table general-table">
+                            <thead>
+                                <tr>
+                                    <th>{get_lang('bandwidth')}</th>
+                                    <th>{get_lang('duedate')}</th>
+                                    <th class="hidden-xs hidden-sm">{get_lang('card_number')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $usedcards as $usedcard}
+                                <tr>
+                                    <td>{$usedcard['traffic']}</td>
+                                    <td>{$usedcard['duedate']}</td>
+                                    <td class="hidden-xs hidden-sm">{$usedcard['card']}</td>
+                                </tr>
+                            {/foreach}    
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {/if}
 			
 			{if ($script)}
 			<section class="panel">

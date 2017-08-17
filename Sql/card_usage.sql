@@ -3,7 +3,7 @@
 -- http://www.phpmyadmin.net
 --
 -- Host: localhost
--- Generation Time: 2017-08-17 15:24:14
+-- Generation Time: 2017-08-17 15:24:28
 -- 服务器版本： 5.5.56-log
 -- PHP Version: 7.0.19
 
@@ -17,32 +17,22 @@ SET time_zone = "+00:00";
 /*!40101 SET NAMES utf8mb4 */;
 
 --
--- Database: `Cards`
+-- Database: `MySSR`
 --
 
 -- --------------------------------------------------------
 
 --
--- 表的结构 `cards`
+-- 表的结构 `card_usage`
 --
 
-CREATE TABLE IF NOT EXISTS `cards` (
-  `cardid` int(11) NOT NULL,
-  `number` text NOT NULL,
+CREATE TABLE IF NOT EXISTS `card_usage` (
+  `sid` int(11) NOT NULL,
+  `enable` int(11) NOT NULL,
+  `card` text NOT NULL,
   `traffic` text NOT NULL,
-  `cardstatus` int(11) NOT NULL,
-  `availabletime` text NOT NULL
+  `duedate` text NOT NULL
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8mb4;
-
---
--- Indexes for dumped tables
---
-
---
--- Indexes for table `cards`
---
-ALTER TABLE `cards`
-  ADD PRIMARY KEY (`cardid`);
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;

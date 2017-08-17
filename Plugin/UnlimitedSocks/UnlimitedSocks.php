@@ -2,6 +2,7 @@
 if(!defined("WHMCS")){
   die("This file cannot be accessed directly");
 }
+require_once 'CardConfig.php';
 
 multi_language_support();
 
@@ -18,6 +19,12 @@ function initialize(array $params , $date = false){
 	$query['USERINFO'] = 'SELECT `id`,`passwd`,`port`,`t`,`u`,`d`,`transfer_enable`,`enable`,`created_at`,`updated_at`,`need_reset`,`sid` FROM `user` WHERE `sid` = :sid';
 	$query['CHANGE_PACKAGE'] = 'UPDATE `user` SET `transfer_enable` = :transfer_enable WHERE `sid` = :sid';
 	$query['RESETUSERCHART'] = 'delete from `user_usage` where `sid` = :sid';
+    $query['GETUSINGCARDS'] = 'SELECT * FROM `card_usage` WHERE `sid` = :sid ORDER BY `duedate` DESC';
+    $query['QUERYCARD'] = 'SELECT * FROM `cards` WHERE `number` = :card AND `cardstatus` = 1';
+    $query['INSERTCARD'] = 'INSERT INTO `card_usage`(`sid`,`enable`,`card`,`traffic`,`duedate`) VALUES (:sid,1,:card,:traffic,:duedate)';
+    $query['UPDATECARD'] = 'UPDATE `cards` SET `cardstatus` = 0 WHERE `cardid` = :cardid';
+    $query['UPDATEACCOUNT'] = 'UPDATE `cards` SET `cardstatus` = 0 WHERE `cardid` = :cardid';
+    $query['UPDATEBALANCE'] = 'UPDATE `user` SET `transfer_enable` = `transfer_enable` + :transfer WHERE `sid` = :sid';
 	if($date){
 		$query['RESET'] = 'UPDATE `user` SET `u`=0,`d`=0,`updated_at`='.$date.'  WHERE `sid` = :sid';
 		$query['CHARTINFO'] = 'SELECT * FROM `user_usage` WHERE `sid` = :sid AND `date` >= '.$date.' ORDER BY `date` DESC';
@@ -415,7 +422,28 @@ function UnlimitedSocks_ClientArea(array $params){
 			$script .= make_script("uploadc",$label,$upload);
 			$script .= make_script("downloadc",$label,$download);
 		}
-		
+        $usedcards = false;
+        $useddcard = false;
+        if(Card_Enable){
+            $usedcards = UnlimitedSocks_GetUsingCards($params);
+            if($usedcards){
+                $uuu = array();
+                foreach($usedcards as $usedcard){
+                    if($usedcard['enable'] == 1){
+                        $uuu[] = array(
+                            'card' => $usedcard['card'],
+                            'traffic' => UnlimitedSocks_MBGB($usedcard['traffic']),
+                            'duedate' => date('Y-m-d', $usedcard['duedate']));
+                    }else{
+                        $useddcard[] = array(
+                            'card' => $usedcard['card'],
+                            'traffic' => UnlimitedSocks_MBGB($usedcard['traffic']),
+                            'duedate' => date('Y-m-d', $usedcard['duedate']));
+                    }
+                }
+                $usedcards = $uuu;
+            }
+		}
 		$nodes = $params['configoption5'];
 		$results = array();
 		$pingresults = array();
@@ -440,13 +468,31 @@ function UnlimitedSocks_ClientArea(array $params){
 			$results[$x] = $b64;
 			$x++;
 		}
-		
 		$infos = $params['configoption7'] ? $params['configoption7'] : false;
-		$user = array('passwd' => $usage['passwd'], 'port' => $usage['port'], 'u' => $usage['u'], 'd' => $usage['d'], 't' => $usage['t'], 'sum' => $usage['u'] + $usage['d'], 'transfer_enable' => $usage['transfer_enable'], 'created_at' => $usage['created_at'], 'updated_at' => $usage['updated_at']);
+		$user = array('passwd' => $usage['passwd'], 
+                      'port' => $usage['port'], 
+                      'u' => $usage['u'], 
+                      'd' => $usage['d'], 
+                      't' => $usage['t'], 
+                      'sum' => $usage['u'] + $usage['d'], 
+                      'transfer_enable' => $usage['transfer_enable'], 
+                      'created_at' => $usage['created_at'], 
+                      'updated_at' => $usage['updated_at']);
 		if ($usage && $usage['enable']) {
 			return array(
 			'tabOverviewReplacementTemplate' => 'details.tpl',
-			'templateVariables'              => array('usage' => $user, 'params' => $params, 'nodes' => $results ,'script' => $script ,'datadays' => $datadays,'nowdate' => date('m/d  H:i',time()),'pings' =>$pingresults,'pingoption' => $params['configoption6'] ,'infos' => $infos)
+			'templateVariables'              => array(
+                                                    'usage' => $user,  
+                                                    'params' => $params, 
+                                                    'nodes' => $results,
+                                                    'script' => $script,
+                                                    'datadays' => $datadays,
+                                                    'nowdate' => date('m/d  H:i',time()),
+                                                    'pings' =>$pingresults,
+                                                    'pingoption' => $params['configoption6'],
+                                                    'infos' => $infos,
+                                                    'usingcards' => $usedcards,
+                                                    'usedcards' => $useddcard)
 			);
 		}
 		return array(
@@ -461,6 +507,160 @@ function UnlimitedSocks_ClientArea(array $params){
 	'templateVariables'              => array('usefulErrorHelper' => get_lang('Model_error').$e->getMessage())
 	);
 	}
+}
+
+function UnlimitedSocks_MBGB($tra){
+    if($tra >= 1024){
+        $tra = $tra / 1024;
+        $tra .= 'GB';
+    }else{
+        $tra .= 'MB';
+    }
+    return $tra;
+}
+
+function UnlimitedSocks_GetUsingCards($params){
+    $query = initialize($params);
+    try {
+        $dbhost = $params['serverip'];
+        $dbname = $params['configoption1'];
+        $dbuser = $params['serverusername'];
+        $dbpass = $params['serverpassword'];
+        $db = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
+        $usage = $db->prepare($query['GETUSINGCARDS']);
+        $usage->bindValue(':sid', $params['serviceid']);
+        $usage->execute();
+        $usage = $usage->fetchAll();
+        return $usage;
+    }
+    catch (Exception $e) {
+		return false;
+	}  
+}
+
+function UnlimitedSocks_ClientAreaCustomButtonArray(){
+    if(Card_Enable){
+        if(UnlimitedSocks_TestCardConnection()){      
+            $buttonarray = array( get_lang('additional_bandwidth') => 'AdditionalBandwidth');
+            return $buttonarray;
+        }
+    }
+}
+
+function UnlimitedSocks_AdditionalBandwidth($params){
+    if(Card_Enable){
+        if(UnlimitedSocks_TestCardConnection()){
+            if($_REQUEST['cardid']){
+               $carduse = UnlimitedSocks_UseCard($params,$_REQUEST['cardid']);
+               if($carduse){
+                   switch($carduse){
+                      case 'success':
+                        $infos = get_lang('use_card_success');
+                      break;
+                      default:
+                        $errors = get_lang($carduse);
+                      break;
+                   }                      
+               }
+           }else{
+               $errors = get_lang('no_card_insert');
+           }  
+        }
+        return array(
+            'templatefile' => 'templates/card',
+            'templateVariables'  => array(
+                'infos' => $infos,
+                'errors' => $errors,
+                )
+            );
+    }
+}
+
+function UnlimitedSocks_UseCard($params,$card){
+    if(!Card_Enable){
+        return false;
+    }
+    $card = check_input($card);
+    if(!preg_match("/[\'.,:;*?~`!@#$%^&+=)(<>{}]|\]|\[|\/|\\\|\"|\|/",$card)){
+        $query = initialize($params);
+        $dbhost = $params['serverip'];
+		$dbname = $params['configoption1'];
+		$dbuser = $params['serverusername'];
+		$dbpass = $params['serverpassword'];
+		$db = new PDO('mysql:host=' . Card_DB_HOST . ';dbname=' . Card_DB_NAME, Card_DB_USER, Card_DB_PASS);
+		$usage = $db->prepare($query['QUERYCARD']);//查询卡是否存在
+		$usage->bindValue(':card', $card);
+		$usage->execute();
+		$usage = $usage->fetch();
+        if($usage){
+            $traffic = $usage['traffic'];
+            $cardid = $usage['cardid'];
+            $availabletime = $usage['availabletime'];
+            $duedate = mktime(0,0,0,date("m"),date("d"),date("y")) + 60 * 60 * 24 * $availabletime;
+            $card = $usage['number'];
+            $dbo = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
+            $usageo = $dbo->prepare($query['INSERTCARD']);//输入进ss数据库
+            $usageo->bindValue(':sid', $params['serviceid']);
+            $usageo->bindValue(':card', $card);
+            $usageo->bindValue(':traffic', $traffic);
+            $usageo->bindValue(':duedate', $duedate);
+            $usageo->execute();
+            if($usageo){
+                $usageo = $db->prepare($query['UPDATECARD']);//设置卡已用
+                $usageo->bindValue(':cardid', $cardid);
+                $usageo->execute();
+                if($usageo){
+                    $transfer = convert($traffic, 'mb', 'bytes');
+                    $usageo = $dbo->prepare($query['UPDATEBALANCE']);//输入进ss数据库
+                    $usageo->bindValue(':sid', $params['serviceid']);
+                    $usageo->bindValue(':transfer', $transfer);
+                    $usageo->execute();
+                    if($usageo){
+                        return 'success';
+                    }
+                    return 'user_main_database_ERROR';
+                }
+                return 'card_database_ERROR';
+            }
+            return 'user_database_ERROR';
+        }
+    }
+    return 'card_unisset_or_unillegal';
+}
+
+function check_input($data){
+    //对特殊符号添加反斜杠
+    $data = addslashes($data);
+    //判断自动添加反斜杠是否开启
+    if(get_magic_quotes_gpc()){
+        //去除反斜杠
+        $data = stripslashes($data);
+    }
+    //把'_'过滤掉
+    $data = str_replace("_", "\_", $data);
+    //把'%'过滤掉
+    $data = str_replace("%", "\%", $data);
+    //把'*'过滤掉
+    $data = str_replace("*", "\*", $data);
+    //回车转换
+    $data = nl2br($data);
+    //去掉前后空格
+    $data = trim($data);
+    //将HTML特殊字符转化为实体
+    $data = htmlspecialchars($data);
+    return $data;
+}
+    
+function UnlimitedSocks_TestCardConnection(){
+    try {
+		$db = new PDO('mysql:host=' . Card_DB_HOST, Card_DB_USER, Card_DB_PASS);
+		$success = true;
+		$errorMsg = '';
+	}
+	catch (Exception $e) {
+        return false;
+	}
+    return true;
 }
 
 function make_script($name,$label,$data){

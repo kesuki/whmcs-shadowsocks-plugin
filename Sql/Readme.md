@@ -3,3 +3,6 @@
 
 # Usage For Old Users|老用户使用
 * 1.Upload user_usage.sql to Mysql Database|上传user_usage.sql到相应原数据库中
+
+# Usage For Additional Bandwidth|流量叠加包使用
+* 1.Upload card_usage.sql to Mysql Database|上传card_usage.sql到相应原数据库中

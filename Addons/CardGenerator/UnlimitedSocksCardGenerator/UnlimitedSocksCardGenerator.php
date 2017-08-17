@@ -43,12 +43,16 @@ function UnlimitedSocksCardGenerator_output($vars) {
             $x = 0;
             $cardarray = parse_card($cards);
             $id = get_id($host,$db,$user,$pass);
-            $mysqly = "INSERT INTO `cards`(`cardid`, `number`, `traffic`, `cardstatus`) VALUES";
+            $availabletime = $_REQUEST['availabletime'];
+            if(!is_numeric($availabletime)){
+               $availabletime = 30; 
+            }
+            $mysqly = "INSERT INTO `cards`(`cardid`, `number`, `traffic`, `cardstatus`, `availabletime`) VALUES";
             while($x < $_REQUEST['amount']){
                 $card = RandomPass($length = 15);
                 if(!in_array($card,$cardarray)){
                     $id ++;
-                    $mysql = "('".$id."','".$card."','".$_REQUEST['traffic']."','1') ,";
+                    $mysql = "('".$id."','".$card."','".$_REQUEST['traffic']."','1','".$availabletime."') ,";
                     $mysqly .= $mysql;
                     $x ++;
                 }
@@ -74,7 +78,8 @@ function UnlimitedSocksCardGenerator_output($vars) {
     <form method="post" action="">
         <h3 class="block-title text-primary"><?echo $LANG['create_card']?></h3>
         <input type="text" class="form-control" name="traffic" /required>(<?echo $LANG['create_card_traffic']?>)</br>
-        <input type="text" class="form-control" name="amount" /required>(<?echo $LANG['create_card_amount']?>)
+        <input type="text" class="form-control" name="amount" /required>(<?echo $LANG['create_card_amount']?>)</br>
+        <input type="text" class="form-control" name="availabletime" />(<?echo $LANG['card_available_time']?>)
         <input class="form-control" type="submit"/>
     </form>
     </hr>
@@ -83,14 +88,16 @@ function UnlimitedSocksCardGenerator_output($vars) {
         echo('<p>'.$LANG['no_card'].'</p>');
     }else{
         $traffic = "";
+        $time = "";
         foreach($cards as $card){
-            if($traffic == $card['traffic']){
+            if($traffic == $card['traffic'] and $time == $card['availabletime']){
                 echo '<p>'.$card['number'].'</p>'; 
             }else{
                 echo '</hr>';
-                echo '<h3 class="block-title text-primary">'.$LANG['traffic_amount'].$card['traffic'].'MB</h3>';
+                echo '<h3 class="block-title text-primary">'.$LANG['traffic_amount'].$card['traffic'].'MB|'.$LANG['card_available_time'].$card['availabletime'].'</h3>';
                 echo '<p>'.$card['number'].'</p>'; 
                 $traffic = $card['traffic'];
+                $time = $card['availabletime'];
             }
            
             

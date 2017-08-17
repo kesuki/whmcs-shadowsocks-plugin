@@ -59,3 +59,16 @@ $_LANG['test_user'] = "User Test(HTTP Request)";
 $_LANG['test_server'] = "Server Test";
 $_LANG['do_not_test'] = "Do Not Test";
 $_LANG['ping_test_description'] = "Ping Test options";
+
+//Additional Bandwidth
+$_LANG['additional_bandwidth'] = "Additional Bandwidth";
+$_LANG['no_card_insert'] = "Please enter the card";
+$_LANG['card_number'] = "Card number";
+$_LANG['user_main_database_ERROR'] = "Something wrong in User's Main Database";
+$_LANG['card_database_ERROR'] = "Something wrong in Card Database";
+$_LANG['user_database_ERROR'] = "Something wrong in User's Card Database";
+$_LANG['card_unisset_or_unillegal'] = "The Card you enter is unisset or unillegal";
+$_LANG['use_card_success'] = "Success";
+$_LANG['used_card_info'] = "Outdated Card";
+$_LANG['card_info'] = "Using Card";
+$_LANG['duedate'] = "Due Date";

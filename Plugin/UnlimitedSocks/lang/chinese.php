@@ -61,3 +61,15 @@ $_LANG['test_server'] = "服务器测试";
 $_LANG['do_not_test'] = "不要测试";
 $_LANG['ping_test_description'] = "Ping测试选项";
 
+//充值卡
+$_LANG['additional_bandwidth'] = "额外流量包";
+$_LANG['no_card_insert'] = "请输入卡号";
+$_LANG['card_number'] = "卡号";
+$_LANG['user_main_database_ERROR'] = "用户主数据库出错";
+$_LANG['card_database_ERROR'] = "卡片数据库出错";
+$_LANG['user_database_ERROR'] = "用户卡片数据表出错";
+$_LANG['card_unisset_or_unillegal'] = "卡片不存在或非法";
+$_LANG['use_card_success'] = "使用成功";
+$_LANG['used_card_info'] = "已过期卡片";
+$_LANG['card_info'] = "用卡信息(使用中)";
+$_LANG['duedate'] = "到期时间";

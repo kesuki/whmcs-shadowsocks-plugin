@@ -12,7 +12,7 @@ if(!$cardmysql) {
     $cards = $cardmysql->query($sql);
     if($cards){
         foreach($cards as $card){
-            if (date('Y-m-d') == date('Y-m-d',$card['duedate'])) {
+            if(strtotime(date('Y-m-d')) >= $card['duedate']){
                 $sql = 'UPDATE `user` SET `transfer_enable` = `transfer_enable` - '. $card['traffic'] * 1048576 .' WHERE `sid` = ' . $card['sid'];
                 $c = $cardmysql->query($sql);
                 if($c){

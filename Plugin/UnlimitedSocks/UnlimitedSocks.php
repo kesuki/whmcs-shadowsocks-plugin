@@ -790,18 +790,18 @@ function makeb64($node,$port,$pass){
 	//7 type
 	if(strstr($node[7], 'ss&ssr')){
         $node[] = array(
-            'ss' => make_ss($node),
-            'ssr' => make_ssr($node),
+            'ss' => make_ss($node,$pass,$port),
+            'ssr' => make_ssr($node,$pass,$port),
         );
     }elseif(strstr($node[7], 'ssr')){
-        $node[] = make_ssr($node);
+        $node[] = make_ssr($node,$pass,$port);
 	}else{
-		$node[] = make_ss($node);
+		$node[] = make_ss($node,$pass,$port);
 	}
 	return $node;
 }
 
-function make_ssr($node){
+function make_ssr($node,$pass,$port){
     $ssrs = "";
     $pass = str_replace('=','',base64_encode($pass));
     $ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
@@ -828,7 +828,7 @@ function make_ssr($node){
     return $data;  
 }
 
-function make_ss($node){
+function make_ss($node,$pass,$port){
     $sss = $node[2].":".$pass."@".$node[1].":".$port;
     $sss = "ss://".base64_encode($sss);
     if($node[0]){

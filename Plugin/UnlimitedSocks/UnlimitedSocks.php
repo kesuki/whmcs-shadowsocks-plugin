@@ -98,6 +98,11 @@ function UnlimitedSocks_ConfigOptions(){
 		'Description' => get_lang('ping_test_description')
 		),
 	get_lang('announcements') => array('Type' => 'textarea', 'Rows' => '3', 'Cols' => '50', 'Description' => get_lang('announcements_description')),	
+    get_lang('card_enable') => array(
+		'Type'        => 'dropdown',
+		'Options'     => array('1' => get_lang('enable'), '0' => get_lang('disable')),
+		'Description' => get_lang('card_enable_description')
+		),
 	);
 }
 
@@ -477,7 +482,11 @@ function UnlimitedSocks_ClientArea(array $params){
                       'sum' => $usage['u'] + $usage['d'], 
                       'transfer_enable' => $usage['transfer_enable'], 
                       'created_at' => $usage['created_at'], 
-                      'updated_at' => $usage['updated_at']);
+                      'updated_at' => $usage['updated_at'],
+                      'tr_MB_GB' => UnlimitedSocks_MBGB($usage['transfer_enable']/1048576),
+                      's_MB_GB' => UnlimitedSocks_MBGB(($usage['u'] + $usage['d'])/1048576|round),
+                      'u_MB_GB' => UnlimitedSocks_MBGB($usage['u']/1048576),
+                      'd_MB_GB' => UnlimitedSocks_MBGB($usage['d']/1048576));
 		if ($usage && $usage['enable']) {
 			return array(
 			'tabOverviewReplacementTemplate' => 'details.tpl',
@@ -511,7 +520,7 @@ function UnlimitedSocks_ClientArea(array $params){
 
 function UnlimitedSocks_MBGB($tra){
     if($tra >= 1024){
-        $tra = $tra / 1024;
+        $tra = round($tra / 1024,2);
         $tra .= 'GB';
     }else{
         $tra .= 'MB';
@@ -548,7 +557,7 @@ function UnlimitedSocks_ClientAreaCustomButtonArray(){
 }
 
 function UnlimitedSocks_AdditionalBandwidth($params){
-    if(Card_Enable){
+    if(Card_Enable and $params['configoption8'] == 1){
         if(UnlimitedSocks_TestCardConnection()){
             if($_REQUEST['cardid']){
                $carduse = UnlimitedSocks_UseCard($params,$_REQUEST['cardid']);
@@ -574,6 +583,12 @@ function UnlimitedSocks_AdditionalBandwidth($params){
                 )
             );
     }
+    return array(
+            'templatefile' => 'templates/error',
+            'templateVariables'  => array(
+                'usefulErrorHelper' => get_lang('card_disable'),
+                )
+            );
 }
 
 function UnlimitedSocks_UseCard($params,$card){
@@ -773,41 +788,53 @@ function makeb64($node,$port,$pass){
 	//5 obfs
 	//6 obfsparam
 	//7 type
-	
-	if(strstr($node[7], 'ssr')){
-		$ssrs = "";
-        $pass = str_replace('=','',base64_encode($pass));
-		$ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
-		if($node[0] or $node[4] or $node[6]){
-			$ssrs .= "/?";
-            $ssrs .= "obfsparam=";
-            if($node[4]){
-                $data = str_replace('=','',base64_encode($node[4]));
-				$ssrs .= $data;
-			}
-            $ssrs .= "&protoparam=";
-            if($node[6]){
-                $data = str_replace('=','',base64_encode($node[6]));
-				$ssrs .= $data;
-			}
-            $ssrs .= "&remarks=";
-			if($node[0]){
-                $data = str_replace('=','',base64_encode($node[0]));
-				$ssrs .= $data;
-			}
-            $data = base64_encode($ssrs);
-            $data = str_replace('=','',$data);
-			$node[] = "ssr://".$data;
-		}
+	if(strstr($node[7], 'ss&ssr')){
+        $node[] = array(
+            'ss' => make_ss($node),
+            'ssr' => make_ssr($node),
+        );
+    }elseif(strstr($node[7], 'ssr')){
+        $node[] = make_ssr($node);
 	}else{
-		$sss = $node[2].":".$pass."@".$node[1].":".$port;
-		$sss = "ss://".base64_encode($sss);
-		if($node[0]){
-			$sss .= "#".$node[0];
-		}
-		$node[] = $sss;
+		$node[] = make_ss($node);
 	}
 	return $node;
+}
+
+function make_ssr($node){
+    $ssrs = "";
+    $pass = str_replace('=','',base64_encode($pass));
+    $ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
+    if($node[0] or $node[4] or $node[6]){
+        $ssrs .= "/?";
+        $ssrs .= "obfsparam=";
+        if($node[4]){
+            $data = str_replace('=','',base64_encode($node[4]));
+            $ssrs .= $data;
+        }
+        $ssrs .= "&protoparam=";
+        if($node[6]){
+            $data = str_replace('=','',base64_encode($node[6]));
+            $ssrs .= $data;
+        }
+        $ssrs .= "&remarks=";
+        if($node[0]){
+            $data = str_replace('=','',base64_encode($node[0]));
+            $ssrs .= $data;
+        }
+    }
+    $data = base64_encode($ssrs);
+    $data = "ssr://".str_replace('=','',$data);
+    return $data;  
+}
+
+function make_ss($node){
+    $sss = $node[2].":".$pass."@".$node[1].":".$port;
+    $sss = "ss://".base64_encode($sss);
+    if($node[0]){
+        $sss .= "#".$node[0];
+    }
+    return $sss;
 }
 ?>
 

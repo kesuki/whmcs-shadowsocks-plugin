@@ -46,7 +46,7 @@ $_LANG['announcements'] = "公告信息";
 $_LANG['resetbandwidth_description'] = "是否需要重置流量";
 $_LANG['bandwidth_description'] = "单位MB 自定义流量套餐请勿填写";
 $_LANG['start_port_description'] = "如果数据库有记录此项无效";
-$_LANG['routelist_description'] = "格式 xxx|服务器地址|加密方式|协议|协议参数|混淆|混淆参数|ss/ssr 一行一个";
+$_LANG['routelist_description'] = "格式 xxx|服务器地址|加密方式|协议|协议参数|混淆|混淆参数|ss/ssr/ss&ssr 一行一个";
 $_LANG['announcements_description'] = "输入需要公告的信息(换行使用 < /br >)";
 
 //其他
@@ -73,3 +73,8 @@ $_LANG['use_card_success'] = "使用成功";
 $_LANG['used_card_info'] = "已过期卡片";
 $_LANG['card_info'] = "用卡信息(使用中)";
 $_LANG['duedate'] = "到期时间";
+$_LANG['card_enable'] = "流量包开关";
+$_LANG['card_disable'] = "流量包功能停用";
+$_LANG['card_enable_description'] = "是否允许使用流量包";
+$_LANG['enable'] = "启用";
+$_LANG['disable'] = "停用";

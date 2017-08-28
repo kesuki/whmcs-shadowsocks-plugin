@@ -89,22 +89,22 @@ background-color: rgba(0, 0, 0, .3);
             <!--progress bar start-->
             <section class="panel">
                 <header class="panel-heading">
-                    {get_lang('usage_chart')} ({get_lang('bandwidth')}：{$usage.transfer_enable/1048576} MB)
+                    {get_lang('usage_chart')} ({get_lang('bandwidth')}：{$usage.tr_MB_GB})
                 </header>
                 <div class="panel-body" id="plugin-usage">
-                    <p>{get_lang('used')} ({($usage.sum/1048576)|round} MB)</p>
+                    <p>{get_lang('used')} ({$usage.s_MB_GB})</p>
                     <div class="progress progress-striped progress-sm">
                         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{($usage.sum/$usage.transfer_enable)*100}" aria-valuemin="0" aria-valuemax="100" style="width: {($usage.sum/$usage.transfer_enable)*100}%">
                             <span class="sr-only">{($usage.sum/$usage.transfer_enable)*100}% Complete</span>
                         </div>
                     </div>
-                    <p>{get_lang('upload')} ({($usage.u/1048576)|round} MB)</p>
+                    <p>{get_lang('upload')} ({$usage.u_MB_GB})</p>
                     <div class="progress progress-striped progress-sm">
                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{($usage.u/$usage.transfer_enable)*100}" aria-valuemin="0" aria-valuemax="100" style="width: {($usage.u/$usage.transfer_enable)*100}%">
                             <span class="sr-only">{($usage.u/$usage.transfer_enable)*100}% Complete (warning)</span>
                         </div>
                     </div>
-                    <p>{get_lang('download')} ({($usage.d/1048576)|round} MB)</p>
+                    <p>{get_lang('download')} ({$usage.d_MB_GB})</p>
                     <div class="progress progress-striped progress-sm">
                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{($usage.d/$usage.transfer_enable)*100}" aria-valuemin="0" aria-valuemax="100" style="width: {($usage.d/$usage.transfer_enable)*100}%">
                             <span class="sr-only">{($usage.d/$usage.transfer_enable)*100}% Complete (danger)</span>
@@ -158,15 +158,34 @@ background-color: rgba(0, 0, 0, .3);
 									</td>
 								{/if}
                                 <td data-hook="action">
-                                    <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
-                                        <i class="fa fa-qrcode"></i>
-                                        {get_lang('show_QRcode')}
-                                    </button>
-									<button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
-                                        <i class="fa fa-qrcode"></i>
-                                        {get_lang('show_URL')}
-                                    </button>
-									{$yy = $yy + 1}
+                                    {if is_array($node[8])}
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS)
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}(SS)
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SSR" data-params="{$node[8]['ssr']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SSR)
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ssr']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}(SSR)
+                                        </button>
+                                    {else}
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}
+                                        </button>
+                                    {/if}
+                                    {$yy = $yy + 1}
                                 </td>
                             </tr>
                             {/foreach}

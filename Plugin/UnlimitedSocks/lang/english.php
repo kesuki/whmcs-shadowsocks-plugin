@@ -46,7 +46,7 @@ $_LANG['announcements'] = "announcements";
 $_LANG['resetbandwidth_description'] = "need reset bandwidth or not";
 $_LANG['bandwidth_description'] = "MB Leave blank for custom bandwidth";
 $_LANG['start_port_description'] = "useless when exist in database";
-$_LANG['routelist_description'] = "name|address|method|protocol|protocol parameters|obfuscation|obfuscation parameters|ss/ssr Each row for one route";
+$_LANG['routelist_description'] = "name|address|method|protocol|protocol parameters|obfuscation|obfuscation parameters|ss/ssr/ss&ssr Each row for one route";
 $_LANG['announcements_description'] = "Write your announcements(new line </br>)";
 //Other
 $_LANG['User_does_not_exists'] = "Model Error:User does not exists";
@@ -72,3 +72,8 @@ $_LANG['use_card_success'] = "Success";
 $_LANG['used_card_info'] = "Outdated Card";
 $_LANG['card_info'] = "Using Card";
 $_LANG['duedate'] = "Due Date";
+$_LANG['card_enable'] = "Card switch";
+$_LANG['card_disable'] = "Additionalbandwidth function Disabled";
+$_LANG['card_enable_description'] = "Enable using additional bandwidth card or not";
+$_LANG['enable'] = "enable";
+$_LANG['disable'] = "disable";

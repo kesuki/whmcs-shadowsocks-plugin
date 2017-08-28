@@ -7,8 +7,8 @@
 * Rewrite band reset functon|重写流量清空定时任务
 * Added bandreset when unsuspend account|新增账户解除暂停时自动清空流量
 * Added Announcements Support|加入公告信息支持
-* Fix The Bug of APIBandreset|修正APIBandreset的时间bug
 * Added Additional Bandwidth System|已加入额外流量包系统
+* Added Support for SS&SSR compatible mode|加入SS&SSR兼容模式支持
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~
@@ -18,6 +18,7 @@
 * ~~Add Ping Test switch function|添加PING测试选项切换支持~~
 * ~~Add Random Password Support|添加随机密码支持~~
 * ~~Add additional bandwidth|添加额外流量包功能~~
+* ~~Fix The Bug of APIBandreset|修正APIBandreset的时间bug~~
 
 ## Attentions
 * You must add a server and select it in Product->Module Settings|请添加服务器并在产品->模块设置中选择服务器

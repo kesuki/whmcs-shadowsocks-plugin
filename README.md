@@ -9,6 +9,7 @@
 * Added Announcements Support|加入公告信息支持
 * Added Additional Bandwidth System|已加入额外流量包系统
 * Added Support for SS&SSR compatible mode|加入SS&SSR兼容模式支持
+* Added Band reset mode(start of month,end of month,calc by duedate)|新增流量重置模式(每月开始，每月底，由结算日计算)
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~
@@ -21,7 +22,7 @@
 * ~~Fix The Bug of APIBandreset|修正APIBandreset的时间bug~~
 
 ## Attentions
-* To use APIBandReset,You MUST Add API IP in System->General->security|如果要使用APIBandReset，你必须在System->General->security中添加访问API的ip
+* To use MysqlBandReset,You MUST edit the database info in MysqlBandReset.php|如果要使用MysqlBandReset，你必须在MysqlBandReset.php中配置数据库信息
 * You must add a server and select it in Product->Module Settings|请添加服务器并在产品->模块设置中选择服务器
 * Please RESET the product AFTER you update the plugin and CHECK every thing is right|请在更新插件后确认全部的产品和服务器配置正确
 * Database is the same as before|数据库兼容旧版
@@ -29,6 +30,7 @@
 * Because of removed 'AccessHash',configoptions has some small changes so please RESET the Prooduct->ModuleSettings|因为移除了访问哈希，请重新配置产品->模块设置
 * Please upload user_usage.sql if you need traffic chart function|如果你需要流量图表功能，请上传user_usage.sql
 * Random Password means you can leave blank in Custom Strings|随机密码的意思是你可以在购买时不填写自定义密码(避免眼滑用户看不见自定义密码选项)
+* To use APIBandReset,You MUST Add API IP in System->General->security|如果要使用APIBandReset，你必须在System->General->security中添加访问API的ip
 * For More support,You can open an issue or email me|需要更多支持，请开issue或者给我发邮件
 
 ## Other

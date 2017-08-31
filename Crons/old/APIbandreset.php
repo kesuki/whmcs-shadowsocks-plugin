@@ -40,7 +40,7 @@ function resetband($id){
 	if(!$mysql) {
 	  die('Unable to connect to database.');
 	} else {
-	  $mysql->query("UPDATE `user` SET `u` = '0', `d` = '0' where `need_reset` = 1 AND `sid` = ".$id);
+	  $mysql->query("UPDATE `user` SET `u` = '0', `d` = '0' where `sid` = ".$id);
 	  $mysql->query("delete from `user_usage` WHERE `sid` = ".$id);
 	  echo("ID:".$id." Has been reset</br>");
 	}

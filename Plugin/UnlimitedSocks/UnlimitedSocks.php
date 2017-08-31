@@ -86,7 +86,7 @@ function UnlimitedSocks_ConfigOptions(){
 	get_lang('database') => array('Type' => 'text', 'Size' => '25'),
 	get_lang('resetbandwidth') => array(
 		'Type'        => 'dropdown',
-		'Options'     => array('1' => get_lang('need_reset'), '0' => get_lang('neednot_reset')),
+		'Options'     => array('3'=> get_lang('end_of_month'), '2'=> get_lang('start_of_month'), '1' => get_lang('by_duedate_day'), '0' => get_lang('neednot_reset')),
 		'Description' => get_lang('resetbandwidth_description')
 		),
 	get_lang('bandwidth') => array('Type' => 'text', 'Size' => '25', 'Description' => get_lang('bandwidth_description')),

@@ -122,9 +122,9 @@ background-color: rgba(0, 0, 0, .3);
                         <thead>
                             <tr>
                                 <th>{get_lang('name')}</th>
-								<th class="hidden-xs hidden-sm">{get_lang('connect_type')}</th>
-                                <th>{get_lang('address')}</th>
-                                <th>{get_lang('method')}</th>
+								<th>{get_lang('connect_type')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('address')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('method')}</th>
                                 <th class="hidden-xs hidden-sm">{get_lang('protocol')}</th>
                                 <th class="hidden-xs hidden-sm">{get_lang('obfuscation')}</th>
 								{if ($pingoption != 0)}
@@ -138,9 +138,9 @@ background-color: rgba(0, 0, 0, .3);
                             {foreach $nodes as $node }
                             <tr>
                                 <td>{$node[0]}</td>
-								<td class="hidden-xs hidden-sm">{$node[7]}</td>
-                                <td>{$node[1]}</td>
-                                <td>{$node[2]}</td>
+								<td>{$node[7]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[1]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[2]}</td>
                                 <td class="hidden-xs hidden-sm">{$node[3]}</td>
                                 <td class="hidden-xs hidden-sm">{$node[5]}</td>
 								{if ($pingoption == 1)}

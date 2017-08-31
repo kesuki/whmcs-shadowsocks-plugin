@@ -484,9 +484,9 @@ function UnlimitedSocks_ClientArea(array $params){
                       'created_at' => $usage['created_at'], 
                       'updated_at' => $usage['updated_at'],
                       'tr_MB_GB' => UnlimitedSocks_MBGB($usage['transfer_enable']/1048576),
-                      's_MB_GB' => UnlimitedSocks_MBGB(($usage['u'] + $usage['d'])/1048576|round),
-                      'u_MB_GB' => UnlimitedSocks_MBGB($usage['u']/1048576),
-                      'd_MB_GB' => UnlimitedSocks_MBGB($usage['d']/1048576));
+                      's_MB_GB' => UnlimitedSocks_MBGB(round(($usage['u'] + $usage['d'])/1048576,2)),
+                      'u_MB_GB' => UnlimitedSocks_MBGB(round($usage['u']/1048576,2)),
+                      'd_MB_GB' => UnlimitedSocks_MBGB(round($usage['d']/1048576,2)));
 		if ($usage && $usage['enable']) {
 			return array(
 			'tabOverviewReplacementTemplate' => 'details.tpl',

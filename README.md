@@ -21,6 +21,7 @@
 * ~~Fix The Bug of APIBandreset|修正APIBandreset的时间bug~~
 
 ## Attentions
+* To use APIBandReset,You MUST Add API IP in System->General->security|如果要使用APIBandReset，你必须在System->General->security中添加访问API的ip
 * You must add a server and select it in Product->Module Settings|请添加服务器并在产品->模块设置中选择服务器
 * Please RESET the product AFTER you update the plugin and CHECK every thing is right|请在更新插件后确认全部的产品和服务器配置正确
 * Database is the same as before|数据库兼容旧版

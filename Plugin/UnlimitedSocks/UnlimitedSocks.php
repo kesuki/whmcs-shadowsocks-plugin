@@ -3,6 +3,7 @@ if(!defined("WHMCS")){
   die("This file cannot be accessed directly");
 }
 require_once 'CardConfig.php';
+require_once 'LangConfig.php';
 
 multi_language_support();
 
@@ -736,12 +737,15 @@ function multi_language_support(){
 		$language = _getUserLanguage('tblclients', 'uid');
 	}
 	if(!$language){
-		$language = "english";
+		$language = Default_Lang;
 	}
 	$file = $dir.'/'.$language.".php";
 	if(file_exists($file)){
 		include($file);
-	}
+	}else{
+        $file = $dir.'/'.Default_Lang.'.php';
+        include($file);
+    }
 	return $file;
 }
 

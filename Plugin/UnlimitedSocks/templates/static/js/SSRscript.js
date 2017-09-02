@@ -83,7 +83,7 @@ $(document).ready(function() {
 				offset: 'auto',
 				closeBtn: 1,
 				shadeClose: true,
-				content: '<img style="position: relative; width: 100%; height: 100%;" src="https://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/>'
+				content: '<div id="qrcode"></div><script type="text/javascript">str = "' + str + '";var qrcode = new QRCode("qrcode", {width : 300,height : 300,colorDark: "#123"});qrcode.makeCode(str);</script>'
 			});
 		});
 		$("button[name='url']").on('click',function() {

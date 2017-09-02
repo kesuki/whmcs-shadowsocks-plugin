@@ -1,7 +1,7 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
 
-* fixed QRcode support for ssr|已修复二维码支持
+* fixed QRcode support for ss&ssr|已修复SS和SSR二维码支持
 * added traffic chart support|添加用户流量图表
 * fixed utf-8 error|修复中文备注乱码问题
 * Rewrite band reset functon|重写流量清空定时任务
@@ -10,6 +10,7 @@
 * Added Additional Bandwidth System|已加入额外流量包系统
 * Added Support for SS&SSR compatible mode|加入SS&SSR兼容模式支持
 * Added Band reset mode(start of month,end of month,calc by duedate)|新增流量重置模式(每月开始，每月底，由结算日计算)
+* Please Refresh CDN and Empty Template Cache in Utilities->System->System Cleanup|请刷新CDN并且在其他选项->系统相关->系统清理中清除模板缓存
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~

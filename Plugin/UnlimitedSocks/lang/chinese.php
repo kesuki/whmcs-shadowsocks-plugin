@@ -81,3 +81,7 @@ $_LANG['card_disable'] = "流量包功能停用";
 $_LANG['card_enable_description'] = "是否允许使用流量包";
 $_LANG['enable'] = "启用";
 $_LANG['disable'] = "停用";
+
+//后台
+$_LANG['no_client_product_isset'] = "暂无用户产品";
+$_LANG['no_products'] = "暂无产品/服务";

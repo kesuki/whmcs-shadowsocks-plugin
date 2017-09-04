@@ -1,0 +1,72 @@
+<style>
+.table-container
+{
+width: 100%;
+overflow-y: auto;
+_overflow: auto;
+margin: 0 0 1em;
+}
+
+.table-container::-webkit-scrollbar
+{
+-webkit-appearance: none;
+width: 14px;
+height: 14px;
+}
+
+.table-container::-webkit-scrollbar-thumb
+{
+border-radius: 8px;
+border: 3px solid #fff;
+background-color: rgba(0, 0, 0, .3);
+}
+
+.table-container-outer { position: relative; }
+
+.table-container-fade
+{
+	position: absolute;
+	right: 0;
+	width: 30px;
+	height: 100%;
+	background-image: -webkit-linear-gradient(0deg, rgba(255,255,255,.5), #fff);
+	background-image: -moz-linear-gradient(0deg, rgba(255,255,255,.5), #fff);
+	background-image: -ms-linear-gradient(0deg, rgba(255,255,255,.5), #fff);
+	background-image: -o-linear-gradient(0deg, rgba(255,255,255,.5), #fff);
+	background-image: linear-gradient(0deg, rgba(255,255,255,.5), #fff);
+}
+</style>
+<div class="panel-body table-container">
+    <table class="table general-table">
+        <thead>
+            <tr>
+                <th>SID</th>
+                <th><?echo(get_lang('serverusername'))?></th>
+                <th><?echo(get_lang('orderproduct'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('orderbillingcycle'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('networkissuestypeserver'))?></th>
+                <th><?echo(get_lang('port'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('upload'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('download'))?></th>
+                <th><?echo(get_lang('used'))?></th>
+                <th><?echo(get_lang('action'))?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?foreach($data as $datas){?>
+                <tr>
+                    <td><a href="clientsservices.php?id=<?echo($datas['id'])?>"><?echo($datas['id'])?></a></td>
+                    <td><a href="clientssummary.php?userid=<?echo($datas['clientid'])?>"><?echo(getusername($datas['clientid']))?></a></td>
+                    <td><?echo($datas['name'])?></td>
+                    <td class="hidden-xs hidden-sm"><?echo(get_lang('orderpaymentterm'.strtolower(str_replace('-','',$datas['billingcycle']))))?></td>
+                    <td class="hidden-xs hidden-sm"><?echo($datas['translated_groupname'])?></td>
+                    <td><?echo($datas['details']['Port'])?></td>
+                    <td class="hidden-xs hidden-sm"><?echo(MMBGB($datas['details']['U']))?></td>
+                    <td class="hidden-xs hidden-sm"><?echo(MMBGB($datas['details']['D']))?></td>
+                    <td><?echo(MMBGB($datas['details']['A']))?></td>
+                    <td>-</td>
+                </tr> 
+            <?}?>   
+        </tbody>
+    </table>
+</div>   

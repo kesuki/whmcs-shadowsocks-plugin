@@ -1,6 +1,7 @@
 <!-- CSS -->
 <link rel="stylesheet" href="modules/servers/{$module}/templates/static/css/style.css">
 <script src="modules/servers/{$module}/templates/static/js/Chart.js"></script>
+<script src="modules/servers/{$module}/templates/static/js/qrcode.js"></script>
 <style>
 .table-container
 {
@@ -39,6 +40,11 @@ background-color: rgba(0, 0, 0, .3);
 	background-image: linear-gradient(0deg, rgba(255,255,255,.5), #fff);
 }
 </style>
+{if ($infos)}
+	<div class="alert alert-success">
+		<p>{$infos}</p>
+	</div>
+{/if}
 <div class="plugin">
     <div class="row">
         <div class="col-md-12">
@@ -66,8 +72,6 @@ background-color: rgba(0, 0, 0, .3);
                             <tr>
                                 <th>{get_lang('port')}</th>
                                 <th>{get_lang('password')}</th>
-                                <th>{get_lang('protocol')}</th>
-                                <th>{get_lang('obfuscation')}</th>
                                 <th class="hidden-xs hidden-sm">{get_lang('created_at')}</th>
                                 <th class="hidden-sm hidden-xs">{get_lang('last_use_time')}</th>
                             </tr>
@@ -76,8 +80,6 @@ background-color: rgba(0, 0, 0, .3);
                             <tr>
                                 <td>{$usage.port}</td>
                                 <td>{$usage.passwd}</td>
-                                <td>{$nodes[0][3]}</td>
-                                <td>{$nodes[0][5]}</td>
                                 <td class="hidden-xs hidden-sm">{$usage.created_at|date_format:'%Y-%m-%d %H:%M:%S'}</td>
                                 <td class="hidden-sm hidden-xs">{$usage.t|date_format:'%Y-%m-%d %H:%M:%S'}</td>
                             </tr>
@@ -88,22 +90,22 @@ background-color: rgba(0, 0, 0, .3);
             <!--progress bar start-->
             <section class="panel">
                 <header class="panel-heading">
-                    {get_lang('usage_chart')} ({get_lang('bandwidth')}：{$usage.transfer_enable/1048576} MB)
+                    {get_lang('usage_chart')} ({get_lang('bandwidth')}：{$usage.tr_MB_GB})
                 </header>
                 <div class="panel-body" id="plugin-usage">
-                    <p>{get_lang('used')} ({($usage.sum/1048576)|round} MB)</p>
+                    <p>{get_lang('used')} ({$usage.s_MB_GB})</p>
                     <div class="progress progress-striped progress-sm">
                         <div class="progress-bar progress-bar-info" role="progressbar" aria-valuenow="{($usage.sum/$usage.transfer_enable)*100}" aria-valuemin="0" aria-valuemax="100" style="width: {($usage.sum/$usage.transfer_enable)*100}%">
                             <span class="sr-only">{($usage.sum/$usage.transfer_enable)*100}% Complete</span>
                         </div>
                     </div>
-                    <p>{get_lang('upload')} ({($usage.u/1048576)|round} MB)</p>
+                    <p>{get_lang('upload')} ({$usage.u_MB_GB})</p>
                     <div class="progress progress-striped progress-sm">
                         <div class="progress-bar progress-bar-warning" role="progressbar" aria-valuenow="{($usage.u/$usage.transfer_enable)*100}" aria-valuemin="0" aria-valuemax="100" style="width: {($usage.u/$usage.transfer_enable)*100}%">
                             <span class="sr-only">{($usage.u/$usage.transfer_enable)*100}% Complete (warning)</span>
                         </div>
                     </div>
-                    <p>{get_lang('download')} ({($usage.d/1048576)|round} MB)</p>
+                    <p>{get_lang('download')} ({$usage.d_MB_GB})</p>
                     <div class="progress progress-striped progress-sm">
                         <div class="progress-bar progress-bar-danger" role="progressbar" aria-valuenow="{($usage.d/$usage.transfer_enable)*100}" aria-valuemin="0" aria-valuemax="100" style="width: {($usage.d/$usage.transfer_enable)*100}%">
                             <span class="sr-only">{($usage.d/$usage.transfer_enable)*100}% Complete (danger)</span>
@@ -121,9 +123,11 @@ background-color: rgba(0, 0, 0, .3);
                         <thead>
                             <tr>
                                 <th>{get_lang('name')}</th>
-								<th class="hidden-xs hidden-sm">{get_lang('connect_type')}</th>
-                                <th>{get_lang('address')}</th>
-                                <th>{get_lang('method')}</th>
+								<th>{get_lang('connect_type')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('address')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('method')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('protocol')}</th>
+                                <th class="hidden-xs hidden-sm">{get_lang('obfuscation')}</th>
 								{if ($pingoption != 0)}
 									<th class="hidden-xs hidden-sm">{get_lang('test')}</th>
 								{/if}
@@ -135,32 +139,54 @@ background-color: rgba(0, 0, 0, .3);
                             {foreach $nodes as $node }
                             <tr>
                                 <td>{$node[0]}</td>
-								<td class="hidden-xs hidden-sm">{$node[7]}</td>
-                                <td>{$node[1]}</td>
-                                <td>{$node[2]}</td>
-								<td class="hidden-xs hidden-sm">
-									{if ($pingoption == 1)}
+								<td>{$node[7]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[1]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[2]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[3]}</td>
+                                <td class="hidden-xs hidden-sm">{$node[5]}</td>
+								{if ($pingoption == 1)}
+									<td class="hidden-xs hidden-sm">
 										<button class="btn btn-primary btn-xs" >
 											{$pings[$yy]}
 										</button>
-									{/if}
-									{if ($pingoption == 2)}
+									</td>	
+								{/if}
+								{if ($pingoption == 2)}
+									<td class="hidden-xs hidden-sm">
 										<button name="ping" class="btn btn-primary btn-xs" >
 											{get_lang('ping_test')}
 										</button>
-									{/if}
-								</td>	
+									</td>
+								{/if}
                                 <td data-hook="action">
-                                    <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]}" data-params="{$node[1]}:{$usage.port}:{$node[3]}:{$node[2]}:{$node[5]}:" data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}" data-pass="{$usage.passwd}" data-obfsparam="{$node[4]}" data-protoparam="{$node[6]}" data-note="{$node[0]}">
-                                        <i class="fa fa-qrcode"></i>
-                                        {get_lang('show_QRcode')}
-                                    </button>
-									<button name="url" class="btn btn-primary btn-xs" data-type="{$node[7]}" data-params="{$node[1]|trim}:{$usage.port}:{$nodes[0][3]|trim}:{$node[2]|trim}:{$nodes[0][5]|trim}:" data-pass="{$usage.passwd}" data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}" data-obfsparam="{$node[4]|trim}"
-									data-protoparam="{$node[6]|trim}" data-note="{$node[0]|trim}">
-                                        <i class="fa fa-qrcode"></i>
-                                        {get_lang('show_URL')}
-                                    </button>
-									{$yy = $yy + 1}
+                                    {if is_array($node[8])}
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS)
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}(SS)
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SSR" data-params="{$node[8]['ssr']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SSR)
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ssr']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}(SSR)
+                                        </button>
+                                    {else}
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}
+                                        </button>
+                                    {/if}
+                                    {$yy = $yy + 1}
                                 </td>
                             </tr>
                             {/foreach}
@@ -168,6 +194,62 @@ background-color: rgba(0, 0, 0, .3);
                     </table>
                 </div>
             </section>
+            
+            {if ($usingcards)}
+                <section class="panel">
+                    <header class="panel-heading">
+                        {get_lang('card_info')}
+                    </header>
+                    <div class="panel-body table-container">
+                        <table class="table general-table">
+                            <thead>
+                                <tr>
+                                    <th>{get_lang('bandwidth')}</th>
+                                    <th>{get_lang('duedate')}</th>
+                                    <th class="hidden-xs hidden-sm">{get_lang('card_number')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $usingcards as $usedcard}
+                                <tr>
+                                    <td>{$usedcard['traffic']}</td>
+                                    <td>{$usedcard['duedate']}</td>
+                                    <td class="hidden-xs hidden-sm">{$usedcard['card']}</td>
+                                </tr>
+                            {/foreach}    
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {/if}
+            
+            {if ($usedcards)}
+                <section class="panel">
+                    <header class="panel-heading">
+                        {get_lang('used_card_info')}
+                    </header>
+                    <div class="panel-body table-container">
+                        <table class="table general-table">
+                            <thead>
+                                <tr>
+                                    <th>{get_lang('bandwidth')}</th>
+                                    <th>{get_lang('duedate')}</th>
+                                    <th class="hidden-xs hidden-sm">{get_lang('card_number')}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            {foreach $usedcards as $usedcard}
+                                <tr>
+                                    <td>{$usedcard['traffic']}</td>
+                                    <td>{$usedcard['duedate']}</td>
+                                    <td class="hidden-xs hidden-sm">{$usedcard['card']}</td>
+                                </tr>
+                            {/foreach}    
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            {/if}
 			
 			{if ($script)}
 			<section class="panel">

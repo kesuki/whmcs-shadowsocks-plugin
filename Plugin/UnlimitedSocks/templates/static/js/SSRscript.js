@@ -1,41 +1,31 @@
-/*
- *  ping.js - v0.1.0
- *  Ping Utilities in Javascript
- *  http://github.com/alfg/ping.js
- *
- *  Made by Alfred Gutierrez
- *  Under MIT License
- */
-/**
- * Creates a Ping instance.
- * @returns {Ping}
- * @constructor
- */
-var Ping = function() {};
-/**
- * Pings source and triggers a callback when completed.
- * @param source Source of the website or server, including protocol and port.
- * @param callback Callback function to trigger when completed.
- * @param timeout Optional number of milliseconds to wait before aborting.
- */
-Ping.prototype.ping = function(source, callback, timeout) {
+﻿var Ping = function(opt) {
+    this.opt = opt || {};
+    this.favicon = this.opt.favicon || "/favicon.ico";
+    this.timeout = this.opt.timeout || 0;
+};
+Ping.prototype.ping = function(source, callback) {
     this.img = new Image();
-    timeout = timeout || 0;
     var timer;
-    var start = new Date();
-    this.img.onload = this.img.onerror = pingCheck;
-    if (timeout) { timer = setTimeout(pingCheck, timeout); }
-    /**
-     * Times ping and triggers callback.
-     */
-    function pingCheck() {
-        if (timer) { clearTimeout(timer);}
+
+    
+    this.img.onload = pingCheck;
+    this.img.onerror = pingCheck;
+    if (this.timeout) { timer = setTimeout(pingCheck, this.timeout); }
+	var start = new Date();
+    function pingCheck(e) {
+        if (timer) { clearTimeout(timer); }
         var pong = new Date() - start;
+
         if (typeof callback === "function") {
-            callback(pong);
+            if (e.type === "error") {
+                console.error("error loading resource");
+                return callback("error", pong);
+            }
+            return callback(null, pong);
         }
     }
-    this.img.src = source + "/?" + (+new Date()); // Trigger image load with cache buster
+
+    this.img.src = source + this.favicon + "?" + (+new Date()); // Trigger image load with cache buster
 };
 var base64EncodeChars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
 function base64encode(str) {
@@ -69,46 +59,35 @@ function base64encode(str) {
     return out;
 }
 $(document).ready(function() {
-    /* Custom */
     $('button[name="ping"]').on('click',function() {
         var ping = new Ping();
         var address = $(this).attr('data-host');
         var timeout = 1000;
         var _this  = $(this);
-        ping.ping('http://' + address,function(data) {
-            if(data >= timeout) {
-                _this.parents('td').html('<span class="badge badge-danger">X</span>');
-            } else {
-                _this.parents('td').html('<span class="badge badge-primary">√</span>');
-            }
-        },timeout);
+        ping.ping('http://' + address,function(err,data) {
+			if (err) {
+				data = data + " " + err;
+				_this.parents('td').html('<span class="badge badge-danger">' + data + '</span>');
+			}else{
+				_this.parents('td').html('<span class="badge badge-primary">' + data + '</span>');
+			}
+        });
     });
 	jQuery(document).ready(function($) {
 		$("button[name='qrcode']").on('click',function() {
-			if($(this).attr('data-type').indexOf("ssr")!=-1){
-				str = $(this).attr('data-params') + base64encode($(this).attr('data-pass')) + '/?obfsparam=' + base64encode($(this).attr('data-obfsparam')) + '&protoparam=' + base64encode($(this).attr('data-protoparam')) +  '&remarks=' + base64encode($(this).attr('data-note')) ;
-			} else {
-				str = $(this).attr('data-params-SS');
-			}
-			str = base64encode(str);
-			str = $(this).attr('data-type') + '://' + str;
+			str = $(this).attr('data-params');
+			str = encodeURI(str);
 			layer.open({
 				type: 1,
 				title: $(this).attr('data-type'),
 				offset: 'auto',
 				closeBtn: 1,
 				shadeClose: true,
-				content: '<img style="position: relative; width: 100%; height: 100%;" src="http://pan.baidu.com/share/qrcode?w=300&h=300&url=' + str + '"/>'
+				content: '<div id="qrcode"></div><script type="text/javascript">str = "' + str + '";var qrcode = new QRCode("qrcode", {width : 300,height : 300,colorDark: "#123"});qrcode.makeCode(str);</script>'
 			});
 		});
 		$("button[name='url']").on('click',function() {
-			if($(this).attr('data-type').indexOf("ssr")!=-1){
-				str = $(this).attr('data-params') + base64encode($(this).attr('data-pass')) + '/?obfsparam=' + base64encode($(this).attr('data-obfsparam')) + '&protoparam=' + base64encode($(this).attr('data-protoparam')) +  '&remarks=' + base64encode($(this).attr('data-note')) ;
-			} else {
-				str = $(this).attr('data-params-SS');
-			}
-			str = base64encode(str);
-			str = $(this).attr('data-type') + '://' + str;
+			str = $(this).attr('data-params');
 			layer.alert(str);
 		});
 	});

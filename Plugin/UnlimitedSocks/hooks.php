@@ -178,7 +178,7 @@ function get_more_client_product_info($products,$server,$whproduct){
             "Traffic" => $ssacc['transfer_enable'],
             "U" => round($ssacc['u']/1048576,2),
             "D" => round($ssacc['d']/1048576,2),
-            "A" => round($ssacc['u'] + $ssacc['d']/1048576,2),
+            "A" => round(($ssacc['u'] + $ssacc['d'])/1048576,2),
             "Last" => $ssacc['t'],
             "LReset" => $ssacc['updated_at']
         );

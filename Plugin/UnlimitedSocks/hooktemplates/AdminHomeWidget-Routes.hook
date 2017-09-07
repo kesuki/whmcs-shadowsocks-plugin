@@ -1,0 +1,29 @@
+<div class="panel-body table-container">
+    <table class="table general-table">
+        <thead>
+            <tr>
+				<th><?echo(get_lang('name'))?></th>
+				<th><?echo(get_lang('connect_type'))?></th>
+				<th class="hidden-xs hidden-sm"><?echo(get_lang('address'))?></th>
+				<th class="hidden-xs hidden-sm"><?echo(get_lang('method'))?></th>
+				<th class="hidden-xs hidden-sm"><?echo(get_lang('protocol'))?></th>
+				<th class="hidden-xs hidden-sm"><?echo(get_lang('obfuscation'))?></th>
+				<th><?echo(get_lang('action'))?></th>
+			</tr>
+        </thead>
+        <tbody>
+            <?foreach($data['routes'] as $node){?>
+				<?$node = explode('|', $node);?>
+                <tr>
+                    <td><?echo($node[0])?></td>
+					<td><?echo($node[7])?></td>
+					<td class="hidden-xs hidden-sm"><?echo($node[1])?></td>
+					<td class="hidden-xs hidden-sm"><?echo($node[2])?></td>
+					<td class="hidden-xs hidden-sm"><?echo($node[3])?></td>
+					<td class="hidden-xs hidden-sm"><?echo($node[5])?></td>
+                    <td>-</td>
+                </tr> 
+            <?}?>   
+        </tbody>
+    </table>
+</div>   

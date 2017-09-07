@@ -1,6 +1,7 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
 
+* Panel is still in progress,you can not manage but you can see the products and routes in admin's home widget|控制面板仍在开发，你现在能通过后台查看你的线路和产品了
 * fixed QRcode support for ss&ssr|已修复SS和SSR二维码支持
 * added traffic chart support|添加用户流量图表
 * fixed utf-8 error|修复中文备注乱码问题

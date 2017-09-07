@@ -85,3 +85,6 @@ $_LANG['disable'] = "停用";
 //后台
 $_LANG['no_client_product_isset'] = "暂无用户产品";
 $_LANG['no_products'] = "暂无产品/服务";
+$_LANG['no_info'] = "暂无信息";
+$_LANG['no_routes'] = "暂无线路";
+$_LANG['version'] = "版本";

@@ -85,3 +85,6 @@ $_LANG['disable'] = "disable";
 //Panel
 $_LANG['no_client_product_isset'] = "There's No product here";
 $_LANG['no_products'] = "No Product/Service";
+$_LANG['no_info'] = "No info here";
+$_LANG['no_routes'] = "No routes now";
+$_LANG['version'] = "Version";

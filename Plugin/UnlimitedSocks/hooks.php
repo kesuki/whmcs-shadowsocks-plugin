@@ -1,17 +1,98 @@
 <?php
+if (!defined("WHMCS"))
+    die("This file cannot be accessed directly");
+
+define("currentVersion", "2.1.0Beta2");
 require_once 'lib/functions.php';
 multi_language_support();
+add_hook('AdminHomeWidgets', 0, function() {
+    return new UnlimitedSocksMainWidget();
+});
+
 add_hook('AdminHomeWidgets', 1, function() {
-    return new UnlimitedSocksProductsWidget();
+    return new UnlimitedSocksRoutesWidget();
 });
 
 add_hook('AdminHomeWidgets', 2, function() {
+    return new UnlimitedSocksProductsWidget();
+});
+
+add_hook('AdminHomeWidgets', 3, function() {
     return new UnlimitedSocksClientsWidget();
 });
 
-/**
- * Hello World Widget.
- */
+class UnlimitedSocksMainWidget extends \WHMCS\Module\AbstractWidget
+{
+    protected $title = 'UnlimitedSocks';
+    protected $description = 'UnlimitedSocks-MainPanel';
+    protected $columns = 3;
+    protected $cache = false;
+    protected $cacheExpiry = 120;
+    protected $requiredPermission = '';
+    
+    public function getData()
+    {   
+        $command = 'getproductsall';
+        $postData = array(
+            'module' => 'UnlimitedSocks',
+        );
+        $results = localAPI($command, $postData, 1);
+        if($results['result'] != 'success' or !$results){
+            return false;
+        }
+        $products = $results['products']['product'];
+        $data = array(
+            'proamount' => count($products),
+            'routes' => count(prase_routes($results)),
+        );
+        return $data;
+    }
+
+    public function generateOutput($data)
+    {   
+        if($data){
+            render_html_tpl("AdminHomeWidget-Main",$data);   
+        }else{
+            render_html_tpl("error",get_lang('no_info'));
+        }
+    }
+}
+
+class UnlimitedSocksRoutesWidget extends \WHMCS\Module\AbstractWidget
+{
+    protected $title = 'UnlimitedSocks-Routes';
+    protected $description = 'UnlimitedSocks-AdminPanel(Routes)';
+    protected $columns = 3;
+    protected $cache = false;
+    protected $cacheExpiry = 120;
+    protected $requiredPermission = '';
+    
+    public function getData()
+    {   
+        $command = 'getproductsall';
+        $postData = array(
+            'module' => 'UnlimitedSocks',
+        );
+        $results = localAPI($command, $postData, 1);
+        if($results['result'] != 'success' or !$results){
+            return false;
+        }
+        $data = array(
+            'routes' => prase_routes($results),
+        );
+        return $data;
+    }
+
+    public function generateOutput($data)
+    {   
+        if($data){
+            render_html_tpl("AdminHomeWidget-Routes",$data);   
+        }else{
+            render_html_tpl("error",get_lang('no_routes'));
+        }
+    }
+}
+
 class UnlimitedSocksProductsWidget extends \WHMCS\Module\AbstractWidget
 {
     protected $title = 'UnlimitedSocks-Products';
@@ -134,6 +215,24 @@ function prase_product_DB($products,$module = 'UnlimitedSocks'){
         }
     }
     return $product;
+}
+
+function prase_routes($products){
+	$products = $products['products']['product'];
+	$routes = array();
+	foreach($products as $product){
+		$route = $product['configoptions']['configoption']['5'];
+		foreach(prase_node($route) as $node){
+			array_push($routes,$node);
+		}
+	}
+	return array_unique($routes);
+}
+
+function prase_node($routes){
+	$results = array();
+	$noder = explode("\n",$routes);
+	return $noder;
 }
 
 function get_client_products_with_pids($products,$pids,$status = array('Active')){

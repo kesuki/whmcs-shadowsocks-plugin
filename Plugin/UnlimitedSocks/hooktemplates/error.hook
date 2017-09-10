@@ -1,0 +1,3 @@
+<div class="alert alert-danger">
+    <p><?echo($data);?></p>
+</div>

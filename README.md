@@ -1,6 +1,8 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
 
+* Panel 80%Done|面板 80%完成
+* added support for product control|增加对产品管理的支持
 * fixed QRcode support for ss&ssr|已修复SS和SSR二维码支持
 * added traffic chart support|添加用户流量图表
 * fixed utf-8 error|修复中文备注乱码问题
@@ -11,6 +13,7 @@
 * Added Support for SS&SSR compatible mode|加入SS&SSR兼容模式支持
 * Added Band reset mode(start of month,end of month,calc by duedate)|新增流量重置模式(每月开始，每月底，由结算日计算)
 * Please Refresh CDN and Empty Template Cache in Utilities->System->System Cleanup|请刷新CDN并且在其他选项->系统相关->系统清理中清除模板缓存
+* To Old Users:you may need to deactivate and reactivate your module in order for WHMCS to recognise it.|你可能需要重新刷新插件(去产品/服务中找个产品不改配置直接保存即可)来让WHMCS识别
 
 ## TO-DO List
 * ~~Readd custom traffic module|重新添加自定义流量系统~~
@@ -21,6 +24,7 @@
 * ~~Add Random Password Support|添加随机密码支持~~
 * ~~Add additional bandwidth|添加额外流量包功能~~
 * ~~Fix The Bug of APIBandreset|修正APIBandreset的时间bug~~
+* Improve admin panel|改善管理员面板
 
 ## Attentions
 * To use MysqlBandReset,You MUST edit the database info in MysqlBandReset.php|如果要使用MysqlBandReset，你必须在MysqlBandReset.php中配置数据库信息

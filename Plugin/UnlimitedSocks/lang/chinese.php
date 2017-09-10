@@ -81,3 +81,17 @@ $_LANG['card_disable'] = "流量包功能停用";
 $_LANG['card_enable_description'] = "是否允许使用流量包";
 $_LANG['enable'] = "启用";
 $_LANG['disable'] = "停用";
+
+//后台
+$_LANG['no_client_product_isset'] = "暂无用户产品";
+$_LANG['no_products'] = "暂无产品/服务";
+$_LANG['no_info'] = "暂无信息";
+$_LANG['no_routes'] = "暂无线路";
+$_LANG['version'] = "版本";
+
+//问题
+$_LANG['are_you_sure_to_reset'] = "你确定要重置产品流量";
+$_LANG['are_you_sure_to_suspend'] = "你确定要暂停产品";
+$_LANG['are_you_sure_to_unsuspend'] = "你确定要取消暂停产品";
+$_LANG['suspendacc'] = "暂停";
+$_LANG['unsuspendacc'] = "取消暂停";

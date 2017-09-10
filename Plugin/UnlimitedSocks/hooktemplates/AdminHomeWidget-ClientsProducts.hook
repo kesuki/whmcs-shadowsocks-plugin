@@ -1,0 +1,36 @@
+<div class="panel-body table-container">
+    <table class="table general-table">
+        <thead>
+            <tr>
+                <th>SID</th>
+                <th><?echo(get_lang('serverusername'))?></th>
+                <th><?echo(get_lang('orderproduct'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('orderbillingcycle'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('networkissuestypeserver'))?></th>
+                <th><?echo(get_lang('clientareastatus'))?></th>
+                <th><?echo(get_lang('port'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('upload'))?></th>
+                <th class="hidden-xs hidden-sm"><?echo(get_lang('download'))?></th>
+                <th><?echo(get_lang('used'))?></th>
+                <th><?echo(get_lang('action'))?></th>
+            </tr>
+        </thead>
+        <tbody>
+            <?foreach($data as $datas){?>
+                <tr>
+                    <td><a href="clientsservices.php?id=<?echo($datas['id'])?>"><?echo($datas['id'])?></a></td>
+                    <td><a href="clientssummary.php?userid=<?echo($datas['clientid'])?>"><?echo(getusername($datas['clientid']))?></a></td>
+                    <td><?echo($datas['name'])?></td>
+                    <td class="hidden-xs hidden-sm"><?echo(get_lang('orderpaymentterm'.strtolower(str_replace('-','',$datas['billingcycle']))))?></td>
+                    <td class="hidden-xs hidden-sm"><?echo($datas['translated_groupname'])?></td>
+                    <td><?echo(get_lang('clientarea'.strtolower($datas['status'])))?></td>
+                    <td><?echo($datas['details']['Port'])?></td>
+                    <td class="hidden-xs hidden-sm"><?echo(MMBGB($datas['details']['U']))?></td>
+                    <td class="hidden-xs hidden-sm"><?echo(MMBGB($datas['details']['D']))?></td>
+                    <td><?echo(MMBGB($datas['details']['A']))?></td>
+                    <td><?echo(makebutton($datas['id'],getusername($datas['clientid']),$datas['details']['Port'],$datas['status']))?></td>
+                </tr> 
+            <?}?>   
+        </tbody>
+    </table>
+</div>   

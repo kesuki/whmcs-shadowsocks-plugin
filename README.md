@@ -1,7 +1,8 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
 
-* Panel is still in progress,you can not manage but you can see the products and routes in admin's home widget|控制面板仍在开发，你现在能通过后台查看你的线路和产品了
+* Panel 80%Done|面板 80%完成
+* added support for product control|增加对产品管理的支持
 * fixed QRcode support for ss&ssr|已修复SS和SSR二维码支持
 * added traffic chart support|添加用户流量图表
 * fixed utf-8 error|修复中文备注乱码问题
@@ -23,6 +24,7 @@
 * ~~Add Random Password Support|添加随机密码支持~~
 * ~~Add additional bandwidth|添加额外流量包功能~~
 * ~~Fix The Bug of APIBandreset|修正APIBandreset的时间bug~~
+* Improve admin panel|改善管理员面板
 
 ## Attentions
 * To use MysqlBandReset,You MUST edit the database info in MysqlBandReset.php|如果要使用MysqlBandReset，你必须在MysqlBandReset.php中配置数据库信息

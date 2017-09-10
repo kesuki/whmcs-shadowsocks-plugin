@@ -2,9 +2,10 @@
 if (!defined("WHMCS"))
     die("This file cannot be accessed directly");
 
-define("currentVersion", "2.1.0Beta2");
+define("currentVersion", "2.1.0Beta3");
 require_once 'lib/functions.php';
 multi_language_support();
+maincontroll();
 add_hook('AdminHomeWidgets', 0, function() {
     return new UnlimitedSocksMainWidget();
 });
@@ -50,6 +51,7 @@ class UnlimitedSocksMainWidget extends \WHMCS\Module\AbstractWidget
 
     public function generateOutput($data)
     {   
+        generateMainscript();
         if($data){
             render_html_tpl("AdminHomeWidget-Main",$data);   
         }else{
@@ -142,7 +144,6 @@ class UnlimitedSocksClientsWidget extends \WHMCS\Module\AbstractWidget
         $postData = array(
         );
         $results = localAPI($command, $postData, 1);
-        //print_r($results);
         if($results['result'] != 'success' or !$results){
             return false;
         }
@@ -154,7 +155,6 @@ class UnlimitedSocksClientsWidget extends \WHMCS\Module\AbstractWidget
         if($resultsp['result'] != 'success' or !$resultsp){
             return false;
         }
-        
         $command = 'GetServersDetails';
         $postData = array(
             'module' => 'UnlimitedSocks',
@@ -164,21 +164,54 @@ class UnlimitedSocksClientsWidget extends \WHMCS\Module\AbstractWidget
             print_r('API File(getserversdetails.php) Unfound');
             return false;
         }
-        //print_r($resultsg);
         $this->server = $resultsg['servers'];
         $pids = prase_pid($resultsp);
-        $pro = get_client_products_with_pids($results,$pids);
+        $pro = get_client_products_with_pids($results,$pids,array('Active','Suspended'));
         $pro = get_more_client_product_info($pro,$this->server,prase_product_DB($resultsp));
-        //print_r($pro);
         return $pro;
     }
     
     public function generateOutput($data)
-    {   //print_r($this->server);
+    {
         if($data){
             render_html_tpl("AdminHomeWidget-ClientsProducts",$data);   
         }else{
             render_html_tpl("error",get_lang('no_client_product_isset'));
+        }
+    }
+}
+
+function maincontroll(){
+    if(isset($_REQUEST['UnlimitedSocksAction']) and isset($_REQUEST['times']) and isset($_REQUEST['id'])){
+        if(time() - $_REQUEST['times'] <= 60 * 10){
+            switch($_REQUEST['UnlimitedSocksAction']){
+                case 'Reset':
+                    $command = 'ModuleCustom';
+                    $postData = array(
+                        'accountid' => $_REQUEST['id'],
+                        'func_name' => 'resetbandwidth',
+                    );
+                    break;
+                case 'Suspend':
+                    $command = 'ModuleSuspend';
+                    $postData = array(
+                        'accountid' => $_REQUEST['id'],
+                    );
+                    break;  
+                case 'Unsuspend':
+                    $command = 'ModuleUnsuspend';
+                    $postData = array(
+                        'accountid' => $_REQUEST['id'],
+                    );
+                    break;  
+                default:
+                    die('No Action');
+                    break;
+            }
+            $results = localAPI($command, $postData,1);
+            die('Success');
+        }else{
+            die('Timeout');
         }
     }
 }
@@ -287,7 +320,7 @@ function get_more_client_product_info($products,$server,$whproduct){
     return $product;
 }
 
-function  mconvert($number, $from, $to){
+function mconvert($number, $from, $to){
 	$to = strtolower($to);
 	$from = strtolower($from);
 	switch ($from) {
@@ -336,7 +369,101 @@ function MMBGB($tra){
     return $tra;
 }
 
+function generateMainscript(){
+    echo('<script>
+    function send(arg) {
+      CreateXMLHttpRequest();
+      xmlhttp.onreadystatechange = callhandle;
+      xmlhttp.open("GET","index.php?" + arg,true);
+      xmlhttp.onreadystatechange = processResponse;
+      xmlhttp.send(null);
+    }
 
+    function CreateXMLHttpRequest() {
+      if (window.ActiveXObject) {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      else if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+      }
+    }
+    
+    function callhandle() {
+      if (xmlhttp.readyState == 4) {
+        if (xmlhttp.status == 200) {
+          alert(xmlhttp.responseText);
+        }
+      }
+    }
+    
+    function processResponse(){
+        if(xmlhttp.readyState == 4){     //判断对象状态
+            if(xmlhttp.status == 200){
+            }else{
+                alert("HTTP 200");
+            }
+        }
+    }
+    </script>');
+}
+
+function makebutton($sid,$user,$port,$status){
+    if($status == "Active"){
+        $button = makelayoutscript("Reset",$sid,$user,$port);
+        $button .= makelayoutscript("Suspend",$sid,$user,$port);
+    }else{
+        $button = makelayoutscript("Unsuspend",$sid,$user,$port);
+    }
+    return $button;
+}
+
+function makelayoutscript($res,$id,$user = null,$port = null){
+    switch($res){
+        case "Reset":
+            $scr = "<button type='button' class='btn btn-danger btn-block' onclick='Reset".$id."()'>".get_lang('resetbandwidth')."</button>
+                    <script>
+                        function Reset".$id."(){
+                            layer.confirm('".get_lang('are_you_sure_to_reset').":".$user."(SID:".$id.",".get_lang('port').$port.")?', {
+                              btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
+                            }, function(){
+                              send('UnlimitedSocksAction=Reset&id=".$id."&times=".time()."');
+                              layer.msg('".get_lang('success')."', {icon: 1});
+                              location.reload();
+                            });
+                        }
+                    </script>";
+            break;
+        case "Suspend":
+            $scr = "<button type='button' class='btn btn-warning btn-block' onclick='Suspend".$id."()'>".get_lang('suspendacc')."</button>
+                    <script>
+                        function Suspend".$id."(){
+                            layer.confirm('".get_lang('are_you_sure_to_suspend').":".$user."(SID:".$id.",".get_lang('port').$port.")?', {
+                              btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
+                            }, function(){
+                              send('UnlimitedSocksAction=Suspend&id=".$id."&times=".time()."');
+                              layer.msg('".get_lang('success')."', {icon: 1});
+                              location.reload();
+                            });
+                        }
+                    </script>";
+            break;
+        case "Unsuspend":
+            $scr = "<button type='button' class='btn btn-warning btn-block' onclick='Suspend".$id."()'>".get_lang('unsuspendacc')."</button>
+                    <script>
+                        function Suspend".$id."(){
+                            layer.confirm('".get_lang('are_you_sure_to_unsuspend').":".$user."(SID:".$id.",".get_lang('port').$port.")?', {
+                              btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
+                            }, function(){
+                              send('UnlimitedSocksAction=Unsuspend&id=".$id."&times=".time()."');
+                              layer.msg('".get_lang('success')."', {icon: 1});
+                              location.reload();
+                            });
+                        }
+                    </script>";
+            break;    
+    }
+    return $scr;
+}
 
 
 

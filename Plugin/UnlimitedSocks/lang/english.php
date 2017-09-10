@@ -88,3 +88,10 @@ $_LANG['no_products'] = "No Product/Service";
 $_LANG['no_info'] = "No info here";
 $_LANG['no_routes'] = "No routes now";
 $_LANG['version'] = "Version";
+
+//Q
+$_LANG['are_you_sure_to_reset'] = "Are you sure to reset product";
+$_LANG['are_you_sure_to_suspend'] = "Are you sure to suspend product";
+$_LANG['are_you_sure_to_unsuspend'] = "Are you sure to unsuspend product";
+$_LANG['suspendacc'] = "suspend";
+$_LANG['unsuspendacc'] = "unsuspend";

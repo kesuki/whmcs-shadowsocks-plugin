@@ -160,9 +160,13 @@ background-color: rgba(0, 0, 0, .3);
 								{/if}
                                 <td data-hook="action">
                                     {if is_array($node[8])}
-                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS" data-params="{$node[8]['ss']}">
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS,Mac)" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
-                                            {get_lang('show_QRcode')}(SS)
+                                            {get_lang('show_QRcode')}(SS(IOS,Mac))
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(Android,Win)" data-params="{$node[8]['ss1']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS(Android,Win))
                                         </button>
                                         <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
@@ -287,4 +291,4 @@ background-color: rgba(0, 0, 0, .3);
 </div>
 <!-- JavsScript -->
 <script src="modules/servers/{$module}/templates/static/layer.js"></script>
-<script src="modules/servers/{$module}/templates/static/js/SSRscript.js"></script>
+<script src="modules/servers/{$module}/templates/static/js/SSRscript.js" charset="utf-8"></script>

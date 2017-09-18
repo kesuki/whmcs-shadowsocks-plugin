@@ -757,15 +757,21 @@ function makeb64($node,$port,$pass){
 	//6 obfsparam
 	//7 type
 	if(strstr($node[7], 'ss&ssr')){
+        $node[7] = 'ss&ssr';
         $node[] = array(
             'ss' => make_ss($node,$pass,$port),
             'ss1' => make_ss($node,$pass,$port,true),
             'ssr' => make_ssr($node,$pass,$port),
         );
     }elseif(strstr($node[7], 'ssr')){
+        $node[7] = 'ssr';
         $node[] = make_ssr($node,$pass,$port);
 	}else{
-		$node[] = make_ss($node,$pass,$port);
+        $node[7] = 'ss';
+        $node[] = array(
+            'ss' => make_ss($node,$pass,$port),
+            'ss1' => make_ss($node,$pass,$port,true),
+        );
 	}
 	return $node;
 }

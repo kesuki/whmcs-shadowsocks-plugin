@@ -177,7 +177,7 @@ background-color: rgba(0, 0, 0, .3);
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_QRcode')}(SS(Android,Win))
                                         </button>
-                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_URL')}
                                         </button>  

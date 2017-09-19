@@ -1,4 +1,4 @@
-<?
+<?php
 define('Card_DB_NAME', '');//数据库名字
 define('Card_DB_USER', '');//用户名
 define('Card_DB_PASS', '');//密码

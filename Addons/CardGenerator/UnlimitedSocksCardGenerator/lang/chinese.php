@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_ADDONLANG['no_card'] = '暂时没有流量充值卡';
 $_ADDONLANG['create_card'] = '生成流量充值卡';

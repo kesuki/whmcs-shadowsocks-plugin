@@ -1,4 +1,4 @@
-<?
+<?php
 
 $_ADDONLANG['no_card'] = 'There is no card available now';
 $_ADDONLANG['create_card'] = 'create additional bandwidth card';

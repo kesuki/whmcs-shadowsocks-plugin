@@ -1,4 +1,4 @@
-<?
+<?php
 define('DB_NAME', '');//数据库名字
 define('DB_USER', '');//数据库用户名
 define('DB_PASS', '');//数据库密码

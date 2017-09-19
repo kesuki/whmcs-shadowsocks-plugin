@@ -3,20 +3,20 @@
         <thead>
             <tr>
                 <th class="hidden-xs hidden-sm">ID</th>
-                <th><?echo(get_lang('orderproduct'))?></th>
-                <th class="hidden-xs hidden-sm"><?echo(get_lang('clientareaproductdetails'))?></th>
-                <th><?echo(get_lang('action'))?></th>
+                <th><?php echo(get_lang('orderproduct'))?></th>
+                <th class="hidden-xs hidden-sm"><?php echo(get_lang('clientareaproductdetails'))?></th>
+                <th><?php echo(get_lang('action'))?></th>
             </tr>
         </thead>
         <tbody>
-            <?foreach($data as $datas){?>
+            <?php foreach($data as $datas){?>
                 <tr>
-                    <td class="hidden-xs hidden-sm"><?echo($datas['pid'])?></td>
-                    <td><a href="configproducts.php?action=edit&id=<?echo($datas['pid'])?>"><?echo($datas['name'])?></a></td>
-                    <td class="hidden-xs hidden-sm"><?echo($datas['description'])?></td>
+                    <td class="hidden-xs hidden-sm"><?php echo($datas['pid'])?></td>
+                    <td><a href="configproducts.php?action=edit&id=<?php echo($datas['pid'])?>"><?php echo($datas['name'])?></a></td>
+                    <td class="hidden-xs hidden-sm"><?php echo($datas['description'])?></td>
                     <td>-</td>
                 </tr> 
-            <?}?>   
+            <?php }?>   
         </tbody>
     </table>
 </div>   

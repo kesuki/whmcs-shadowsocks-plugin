@@ -3,16 +3,16 @@
     <table class="table general-table">
         <thead>
             <tr>
-                <th><?echo(get_lang('version'))?></th>
-                <th><?echo(get_lang('orderproduct'))?></th>
-                <th><?echo(get_lang('routelist'))?></th>
+                <th><?php echo(get_lang('version'))?></th>
+                <th><?php echo(get_lang('orderproduct'))?></th>
+                <th><?php echo(get_lang('routelist'))?></th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><?echo(currentVersion)?></td>
-                <td><?echo($data['proamount'])?></td>
-                <td><?echo($data['routes'])?></td>
+                <td><?php echo(currentVersion)?></td>
+                <td><?php echo($data['proamount'])?></td>
+                <td><?php echo($data['routes'])?></td>
             </tr>
         </tbody>
     </table>

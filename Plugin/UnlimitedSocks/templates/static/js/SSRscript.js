@@ -76,7 +76,6 @@ $(document).ready(function() {
 	jQuery(document).ready(function($) {
 		$("button[name='qrcode']").on('click',function() {
 			str = $(this).attr('data-params');
-			str = encodeURI(str);
 			layer.open({
 				type: 1,
 				title: $(this).attr('data-type'),

@@ -1,4 +1,4 @@
-<?
+<?php
 
 function multi_language_support(){
 	global $_LANG;
@@ -25,11 +25,16 @@ function multi_language_support(){
 }
 
 function _getUserLanguage($table, $field){
-	$sqlresult = select_query($table, 'language', array( 'id' => mysql_real_escape_string($_SESSION[$field])));
-	if($data = mysql_fetch_row($sqlresult)){
-		return reset($data);
-	}
-	return false;
+    try{
+        $sqlresult = select_query($table, 'language', array( 'id' => mysql_real_escape_string($_SESSION[$field])));
+        if($data = mysql_fetch_row($sqlresult)){
+            return reset($data);
+        }
+        return false;
+    }catch(Exception $e){
+        logModuleCall('UnlimitedSocks', 'UnlimitedSocks_MultiLanguageSupport', $field, $e->getMessage(), $e->getTraceAsString());
+        return false;
+    }
 }
 
 function get_lang($var){

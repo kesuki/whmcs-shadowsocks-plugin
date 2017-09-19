@@ -11,6 +11,7 @@
 * Added Announcements Support|加入公告信息支持
 * Added Additional Bandwidth System|已加入额外流量包系统
 * Added Support for SS&SSR compatible mode|加入SS&SSR兼容模式支持
+* Fixed a bug which caused by short_arg|修复了一个由于short_arg导致的bug
 * Added Band reset mode(start of month,end of month,calc by duedate)|新增流量重置模式(每月开始，每月底，由结算日计算)
 * Please Refresh CDN and Empty Template Cache in Utilities->System->System Cleanup|请刷新CDN并且在其他选项->系统相关->系统清理中清除模板缓存
 * To Old Users:you may need to deactivate and reactivate your module in order for WHMCS to recognise it.|你可能需要重新刷新插件(去产品/服务中找个产品不改配置直接保存即可)来让WHMCS识别

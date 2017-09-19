@@ -21,8 +21,8 @@ $_LANG['user_info'] = "用户信息";
 $_LANG['usage_chart'] = "使用报表";
 $_LANG['name'] = "名称";
 $_LANG['connect_type'] = "连接类型";
-$_LANG['method'] = "算法";
-$_LANG['address'] = "地址";
+$_LANG['method'] = "加密算法";
+$_LANG['address'] = "服务器地址";
 $_LANG['test'] = "测试";
 $_LANG['show_QRcode'] = "查看二维码";
 $_LANG['show_URL'] = "查看URL";
@@ -32,7 +32,7 @@ $_LANG['action'] = "操作";
 $_LANG['all_traffic_chart'] = "总流量报表";
 $_LANG['upload_traffic_chart'] = "上传流量报表";
 $_LANG['download_traffic_chart'] = "下载流量报表";
-$_LANG['data_update_at'] = "数据更新与";
+$_LANG['data_update_at'] = "数据更新于";
 
 //设置
 $_LANG['database'] = "数据库";

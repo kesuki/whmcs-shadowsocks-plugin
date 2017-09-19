@@ -159,10 +159,36 @@ background-color: rgba(0, 0, 0, .3);
 									</td>
 								{/if}
                                 <td data-hook="action">
-                                    {if is_array($node[8])}
-                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS" data-params="{$node[8]['ss']}">
+                                    {if $node[7] eq "ssr"}
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
                                             <i class="fa fa-qrcode"></i>
-                                            {get_lang('show_QRcode')}(SS)
+                                            {get_lang('show_QRcode')}
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}
+                                        </button>
+                                    {elseif $node[7] eq "ss"}
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS,Mac)" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS(IOS,Mac))
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(Android,Win)" data-params="{$node[8]['ss1']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS(Android,Win))
+                                        </button>
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_URL')}
+                                        </button>  
+                                    {elseif $node[7] eq "ss&ssr"}
+                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS,Mac)" data-params="{$node[8]['ss']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS(IOS,Mac))
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(Android,Win)" data-params="{$node[8]['ss1']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SS(Android,Win))
                                         </button>
                                         <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
@@ -175,15 +201,6 @@ background-color: rgba(0, 0, 0, .3);
                                         <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ssr']}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_URL')}(SSR)
-                                        </button>
-                                    {else}
-                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="{$node[7]} "data-params="{$node[8]}">
-                                            <i class="fa fa-qrcode"></i>
-                                            {get_lang('show_QRcode')}
-                                        </button>
-                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
-                                            <i class="fa fa-qrcode"></i>
-                                            {get_lang('show_URL')}
                                         </button>
                                     {/if}
                                     {$yy = $yy + 1}
@@ -287,4 +304,4 @@ background-color: rgba(0, 0, 0, .3);
 </div>
 <!-- JavsScript -->
 <script src="modules/servers/{$module}/templates/static/layer.js"></script>
-<script src="modules/servers/{$module}/templates/static/js/SSRscript.js"></script>
+<script src="modules/servers/{$module}/templates/static/js/SSRscript.js" charset="utf-8"></script>

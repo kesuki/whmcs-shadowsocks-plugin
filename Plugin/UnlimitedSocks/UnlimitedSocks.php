@@ -462,18 +462,20 @@ function UnlimitedSocks_ClientArea(array $params){
 			$nodee = explode('|', $nodee);
 			$y = 0;
 			$ress = array();
-			foreach($nodee as $nodet){
-				$ress[$y] = $nodet;
-				$y ++;
-				if($y == 2 and !$detect->isMobile() and $params['configoption6'] == 1){
-					$res = ping_Server($nodet,$usage['port']);
-					$pingresults[$z] = $res;
-					$z ++;
-				}
-			}
-			$b64 = makeb64($ress,$usage['port'],$usage['passwd']);
-			$results[$x] = $b64;
-			$x++;
+            if(!strstr($nodee[7], 'stop')){
+                foreach($nodee as $nodet){
+                    $ress[$y] = $nodet;
+                    $y ++;
+                    if($y == 2 and !$detect->isMobile() and $params['configoption6'] == 1){
+                        $res = ping_Server($nodet,$usage['port']);
+                        $pingresults[$z] = $res;
+                        $z ++;
+                    }
+                }
+                $b64 = makeb64($ress,$usage['port'],$usage['passwd']);
+                $results[$x] = $b64;
+                $x++;
+            }
 		}
 		$infos = $params['configoption7'] ? $params['configoption7'] : false;
 		$user = array('passwd' => $usage['passwd'], 
@@ -814,6 +816,7 @@ function make_ss($node,$pass,$port,$encodeu = false){
         }
         $sss .= "#".$str_encode;
     }
+    $sss = str_replace('=','',$sss);
     return $sss;
 }
 ?>

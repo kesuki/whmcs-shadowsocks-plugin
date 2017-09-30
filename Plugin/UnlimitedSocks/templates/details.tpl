@@ -186,7 +186,7 @@ background-color: rgba(0, 0, 0, .3);
                                             {get_lang('show_URL')}
                                         </button>  
                                     {elseif $node[7] eq "ss&ssr"}
-                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS,Mac)" data-params="{$node[8]['ss']}">
+                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS)" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_QRcode')}(SS(IOS))
                                         </button>

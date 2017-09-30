@@ -774,6 +774,7 @@ function makeb64($node,$port,$pass){
         $node[] = array(
             'ss' => make_ss($node,$pass,$port),
             'ss1' => make_ss($node,$pass,$port,true),
+            'ss2' => make_ss($node,$pass,$port,true,true),
         );
 	}
 	return $node;

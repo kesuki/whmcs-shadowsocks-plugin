@@ -763,6 +763,7 @@ function makeb64($node,$port,$pass){
         $node[] = array(
             'ss' => make_ss($node,$pass,$port),
             'ss1' => make_ss($node,$pass,$port,true),
+            'ss2' => make_ss($node,$pass,$port,true,true),
             'ssr' => make_ssr($node,$pass,$port),
         );
     }elseif(strstr($node[7], 'ssr')){
@@ -805,16 +806,20 @@ function make_ssr($node,$pass,$port){
     return $data;  
 }
 
-function make_ss($node,$pass,$port,$encodeu = false){
+function make_ss($node,$pass,$port,$encodeu = false,$sip002 = false){
     $sss = $node[2].":".$pass."@".$node[1].":".$port;
-    $sss = "ss://".base64_encode($sss);
-    if($node[0]){
-        $encode = mb_detect_encoding($node[0], array("ASCII",'UTF-8',"GB2312","GBK",'BIG5')); 
-        $str_encode = mb_convert_encoding($node[0], 'UTF-8', $encode);
-        if($encodeu){
-            $str_encode = urlencode($str_encode);
+    if(!$sip002){
+        $sss = "ss://".base64_encode($sss);
+        if($node[0]){
+            $encode = mb_detect_encoding($node[0], array("ASCII",'UTF-8',"GB2312","GBK",'BIG5')); 
+            $str_encode = mb_convert_encoding($node[0], 'UTF-8', $encode);
+            if($encodeu){
+                $str_encode = urlencode($str_encode);
+            }
+            $sss .= "#".$str_encode;
         }
-        $sss .= "#".$str_encode;
+    }else{
+        $sss = "ss://".base64_encode($node[2].":".$pass)."@".$node[1].":".$port."#".$node[0];
     }
     $sss = str_replace('=','',$sss);
     return $sss;

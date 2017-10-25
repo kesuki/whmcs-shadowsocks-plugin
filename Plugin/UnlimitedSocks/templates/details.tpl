@@ -164,7 +164,7 @@ background-color: rgba(0, 0, 0, .3);
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_QRcode')}
                                         </button>
-                                        <button name="url" class="btn btn-primary btn-xs hidden-xs hidden-sm" data-params="{$node[8]}">
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_URL')}
                                         </button>
@@ -181,7 +181,7 @@ background-color: rgba(0, 0, 0, .3);
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_QRcode')}(SS(Android,Win))
                                         </button>
-                                        <button name="url" class="btn btn-primary btn-xs hidden-xs hidden-sm" data-params="{$node[8]['ss']}">
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_URL')}
                                         </button>  
@@ -198,7 +198,7 @@ background-color: rgba(0, 0, 0, .3);
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_QRcode')}(SS(Android,Win))
                                         </button>
-                                        <button name="url" class="btn btn-primary btn-xs hidden-xs hidden-sm" data-params="{$node[8]['ss']}">
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_URL')}(SS)
                                         </button>
@@ -206,7 +206,7 @@ background-color: rgba(0, 0, 0, .3);
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_QRcode')}(SSR)
                                         </button>
-                                        <button name="url" class="btn btn-primary btn-xs hidden-xs hidden-sm" data-params="{$node[8]['ssr']}">
+                                        <button name="url" class="btn btn-primary btn-xs" data-params="{$node[8]['ssr']}">
                                             <i class="fa fa-qrcode"></i>
                                             {get_lang('show_URL')}(SSR)
                                         </button>

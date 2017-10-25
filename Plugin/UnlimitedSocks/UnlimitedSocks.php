@@ -27,6 +27,7 @@ function initialize(array $params , $date = false){
     $query['UPDATECARD'] = 'UPDATE `cards` SET `cardstatus` = 0 WHERE `cardid` = :cardid';
     $query['UPDATEACCOUNT'] = 'UPDATE `cards` SET `cardstatus` = 0 WHERE `cardid` = :cardid';
     $query['UPDATEBALANCE'] = 'UPDATE `user` SET `transfer_enable` = `transfer_enable` + :transfer WHERE `sid` = :sid';
+    $query['CHANGE_PORT'] = 'UPDATE `user` SET `port` = :portWHERE `sid` = :sid';
 	if($date){
 		$query['RESET'] = 'UPDATE `user` SET `u`=0,`d`=0,`updated_at`='.$date.'  WHERE `sid` = :sid';
 		$query['CHARTINFO'] = 'SELECT * FROM `user_usage` WHERE `sid` = :sid AND `date` >= '.$date.' ORDER BY `date` DESC';
@@ -377,6 +378,36 @@ function UnlimitedSocks_ResetBandwidth(array $params){
 		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ResetBandwidth', $params, $e->getMessage(), $e->getTraceAsString());
 		return $e->getMessage();
 	}
+}
+
+function UnlimitedSocks_ChangePort(array $params){
+    $query = initialize($params,time());
+    //return json_encode($params);
+    return 'success';
+	/*try {
+		$dbhost = ($params['serverip']);
+		$dbname = ($params['configoption1']);
+		$dbuser = ($params['serverusername']);
+		$dbpass = ($params['serverpassword']);
+		$db = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
+		$enable = $db->prepare($query['CHANGE_PORT']);
+        $enable->bindValue(':port', $params['port']);
+		$enable->bindValue(':sid', $params['serviceid']);
+		$todo = $enable->execute();
+		$resetchart = $db->prepare($query['RESETUSERCHART']);
+		$resetchart->bindValue(':sid', $params['serviceid']);
+		$resetchart->execute();
+		if (!$todo) {
+			$error = $db->errorInfo();
+			return $error;
+		}
+		return 'success';
+	}
+	catch (Exception $e) {
+		logModuleCall('UnlimitedSocks', 'UnlimitedSocks_ResetBandwidth', $params, $e->getMessage(), $e->getTraceAsString());
+		return $e->getMessage();
+	}*/
+    
 }
 
 function UnlimitedSocks_ClientArea(array $params){

@@ -1,4 +1,4 @@
-<?php
+<?
 
 function multi_language_support(){
 	global $_LANG;

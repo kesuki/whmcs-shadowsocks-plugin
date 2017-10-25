@@ -5,6 +5,7 @@
                 <th class="hidden-xs hidden-sm">ID</th>
                 <th><?php echo(get_lang('orderproduct'))?></th>
                 <th class="hidden-xs hidden-sm"><?php echo(get_lang('clientareaproductdetails'))?></th>
+                <th><?php echo(get_lang('clientareastatus'))?></th>
                 <th><?php echo(get_lang('action'))?></th>
             </tr>
         </thead>
@@ -14,7 +15,8 @@
                     <td class="hidden-xs hidden-sm"><?php echo($datas['pid'])?></td>
                     <td><a href="configproducts.php?action=edit&id=<?php echo($datas['pid'])?>"><?php echo($datas['name'])?></a></td>
                     <td class="hidden-xs hidden-sm"><?php echo($datas['description'])?></td>
-                    <td>-</td>
+                    <td><?php if($datas['hidden'] == 0) echo (get_lang('active')); else echo(get_lang('hidden'));?></td>
+                    <td><?php echo(makeproductbutton($datas));?></td>
                 </tr> 
             <?php }?>   
         </tbody>

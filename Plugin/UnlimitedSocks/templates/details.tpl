@@ -2,6 +2,7 @@
 <link rel="stylesheet" href="modules/servers/{$module}/templates/static/css/style.css">
 <script src="modules/servers/{$module}/templates/static/js/Chart.js"></script>
 <script src="modules/servers/{$module}/templates/static/js/qrcode.js"></script>
+<script src="modules/servers/{$module}/templates/static/js/html5-qrcode.js"></script>
 <style>
 .table-container
 {

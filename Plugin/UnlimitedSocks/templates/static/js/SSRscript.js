@@ -76,13 +76,23 @@ $(document).ready(function() {
 	jQuery(document).ready(function($) {
 		$("button[name='qrcode']").on('click',function() {
 			str = $(this).attr('data-params');
+            var tcontent = '<div id="qrcode"></div>';
+            tcontent += '<script type="text/javascript"> \n';
+            tcontent += 'str = "' + str + '"; \n';
+            tcontent += 'var element = document.getElementById("qrcode"); \n';
+            tcontent += 'var bodyElement = document.body; \n';
+            tcontent += 'if(element.lastChild) \n';
+            tcontent += 'element.replaceChild(showQRCode(str), element.lastChild); \n';
+            tcontent += 'else \n';
+            tcontent += 'element.appendChild(showQRCode(str)); \n';
+            tcontent += '</script>';
 			layer.open({
 				type: 1,
 				title: $(this).attr('data-type'),
 				offset: 'auto',
 				closeBtn: 1,
 				shadeClose: true,
-				content: '<div id="qrcode"></div><script type="text/javascript">str = "' + str + '";var qrcode = new QRCode("qrcode", {width : 300,height : 300,colorDark: "#123"});qrcode.makeCode(str);</script>'
+				content: tcontent
 			});
 		});
 		$("button[name='url']").on('click',function() {

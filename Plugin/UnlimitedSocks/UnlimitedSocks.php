@@ -819,18 +819,26 @@ function make_ssr($node,$pass,$port){
     $ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
     if($node[0] or $node[4] or $node[6]){
         $ssrs .= "/?";
-        $ssrs .= "obfsparam=";
         if($node[4]){
+        	$ssrs .= "protoparam=";
             $data = str_replace('=','',base64_encode($node[4]));
             $ssrs .= $data;
+            $need = 1;
         }
-        $ssrs .= "&protoparam=";
         if($node[6]){
+        	if($need){
+        		$ssrs .= "&";
+        	}
+        	$ssrs .= "obfsparam=";
             $data = str_replace('=','',base64_encode($node[6]));
             $ssrs .= $data;
+            $need = 1;
         }
-        $ssrs .= "&remarks=";
         if($node[0]){
+        	if($need){
+        		$ssrs .= "&";
+        	}
+       		$ssrs .= "remarks=";
             $data = str_replace('=','',base64_encode($node[0]));
             $ssrs .= $data;
         }

@@ -95,3 +95,8 @@ $_LANG['are_you_sure_to_suspend'] = "Are you sure to suspend product";
 $_LANG['are_you_sure_to_unsuspend'] = "Are you sure to unsuspend product";
 $_LANG['suspendacc'] = "suspend";
 $_LANG['unsuspendacc'] = "unsuspend";
+
+//status
+$_LANG['active'] = "Active";
+$_LANG['hidden'] = "Hidden";
+$_LANG['resetallports'] = "Reset All Ports";

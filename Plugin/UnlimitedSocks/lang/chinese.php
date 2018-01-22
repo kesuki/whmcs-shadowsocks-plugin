@@ -95,3 +95,8 @@ $_LANG['are_you_sure_to_suspend'] = "你确定要暂停产品";
 $_LANG['are_you_sure_to_unsuspend'] = "你确定要取消暂停产品";
 $_LANG['suspendacc'] = "暂停";
 $_LANG['unsuspendacc'] = "取消暂停";
+
+//状态
+$_LANG['active'] = "激活";
+$_LANG['hidden'] = "隐藏";
+$_LANG['resetallports'] = "重置所有端口(本操作不可还原)";

@@ -2,7 +2,8 @@
 if (!defined("WHMCS"))
     die("This file cannot be accessed directly");
 
-define("currentVersion", "2.1.0Beta4");
+use WHMCS\Database\Capsule;
+define("currentVersion", "2.1.0Beta5");
 require_once 'lib/functions.php';
 multi_language_support();
 maincontroll();
@@ -33,18 +34,15 @@ class UnlimitedSocksMainWidget extends \WHMCS\Module\AbstractWidget
     
     public function getData()
     {   
-        $command = 'getproductsall';
-        $postData = array(
-            'module' => 'UnlimitedSocks',
-        );
-        $results = localAPI($command, $postData, 1);
-        if($results['result'] != 'success' or !$results){
+        $products = array();
+        $query = \WHMCS\Database\Capsule::table('tblproducts')->where('servertype', 'UnlimitedSocks')->get();
+        if(empty($query)){
             return false;
         }
-        $products = $results['products']['product'];
+        $products = QueryToArray($query);
         $data = array(
             'proamount' => count($products),
-            'routes' => count(prase_routes($results)),
+            'routes' => count(prase_routes($products)),
         );
         return $data;
     }
@@ -71,16 +69,14 @@ class UnlimitedSocksRoutesWidget extends \WHMCS\Module\AbstractWidget
     
     public function getData()
     {   
-        $command = 'getproductsall';
-        $postData = array(
-            'module' => 'UnlimitedSocks',
-        );
-        $results = localAPI($command, $postData, 1);
-        if($results['result'] != 'success' or !$results){
+        $products = array();
+        $query = \WHMCS\Database\Capsule::table('tblproducts')->where('servertype', 'UnlimitedSocks')->get();
+        if(empty($query)){
             return false;
         }
+        $products = QueryToArray($query);
         $data = array(
-            'routes' => prase_routes($results),
+            'routes' => prase_routes($products),
         );
         return $data;
     }
@@ -106,21 +102,17 @@ class UnlimitedSocksProductsWidget extends \WHMCS\Module\AbstractWidget
     
     public function getData()
     {   
-        $command = 'GetProductsall';
-        $postData = array(
-            'module' => 'UnlimitedSocks',
-        );
-        $results = localAPI($command, $postData, 1);
-        if($results['result'] != 'success' or !$results){
+        $products = array();
+        $query = \WHMCS\Database\Capsule::table('tblproducts')->where('servertype', 'UnlimitedSocks')->get();
+        if(empty($query)){
             return false;
         }
-        $products = $results['products']['product'];
+        $products = QueryToArray($query);
         return $products;
     }
 
     public function generateOutput($data)
     {   
-    //print_r($data);
         if($data){
             render_html_tpl("AdminHomeWidget-Products",$data);   
         }else{
@@ -141,34 +133,15 @@ class UnlimitedSocksClientsWidget extends \WHMCS\Module\AbstractWidget
     
     public function getData()
     {   
-        $command = 'GetClientsProducts';
-        $postData = array(
-        );
-        $results = localAPI($command, $postData, 1);
-        if($results['result'] != 'success' or !$results){
-            return false;
-        }
-        $command = 'GetProductsall';
-        $postData = array(
-            'module' => 'UnlimitedSocks',
-        );
-        $resultsp = localAPI($command, $postData, 1);
-        if($resultsp['result'] != 'success' or !$resultsp){
-            return false;
-        }
-        $command = 'GetServersDetails';
-        $postData = array(
-            'module' => 'UnlimitedSocks',
-        );
-        $resultsg = localAPI($command, $postData, 1);
-        if($resultsg['result'] != 'success' or !$resultsg){
-            print_r('API File(getserversdetails.php) Unfound');
-            return false;
-        }
-        $this->server = $resultsg['servers'];
-        $pids = prase_pid($resultsp);
-        $pro = get_client_products_with_pids($results,$pids,array('Active','Suspended'));
-        $pro = get_more_client_product_info($pro,$this->server,prase_product_DB($resultsp));
+        $query = \WHMCS\Database\Capsule::table('tblproducts')->where('servertype', 'UnlimitedSocks')->get();
+        $query2 = \WHMCS\Database\Capsule::table('tblhosting')->get();
+        $query3 = \WHMCS\Database\Capsule::table('tblservers')->where('type', 'UnlimitedSocks')->get();
+        $products = QueryToArray($query);
+        $clients = QueryToArray($query2);
+        $servers = QueryToArray($query3);
+        $pids = prase_pid($products);
+        $pro = get_client_products_with_pids($clients,$pids,array('Active','Suspended'));
+        $pro = get_more_client_product_info($pro,$servers,prase_product_DB($products),$products);
         return $pro;
     }
     
@@ -180,6 +153,18 @@ class UnlimitedSocksClientsWidget extends \WHMCS\Module\AbstractWidget
             render_html_tpl("error",get_lang('no_client_product_isset'));
         }
     }
+}
+
+function QueryToArray($query){
+    $products = array();
+    foreach ($query as $product) {
+        $producta = array();
+        foreach($product as $k => $produc){
+            $producta[$k] = $produc;
+        }
+        $products[] = $producta;
+    }
+    return $products;
 }
 
 function maincontroll(){
@@ -206,9 +191,25 @@ function maincontroll(){
                     );
                     break;
                 case 'ResetSystemPorts':
-                    //$result = ChangeSystemPorts();
+                    $result = ChangeSystemPorts();
                     die($result);
                     break;
+                case 'EditProduct':
+                    if(isset($_REQUEST['details']) && isset($_REQUEST['announcements'])){
+                        $result = \WHMCS\Database\Capsule::table('tblproducts')->where('id', $_REQUEST['id'])->update(['description' => $_REQUEST['details']]);
+                        $result = \WHMCS\Database\Capsule::table('tblproducts')->where('id', $_REQUEST['id'])->update(['configoption7' => $_REQUEST['announcements']]);
+                        if(empty($result)){
+                            echo('<script>
+                                    window.location.href="index.php";
+                                </script>');
+                        }else{
+                            echo('<script>
+                                    window.location.href="index.php";
+                                </script>');
+                        }
+                        die();
+                    }
+                    break;    
                 default:
                     //die('No Action');
                     break;
@@ -222,44 +223,34 @@ function maincontroll(){
 }
 
 function getusername($uid){
-    $command = 'GetClientsDetails';
-    $postData = array(
-        'clientid' => $uid,
-    );
-    $results = localAPI($command, $postData, 1);
-    if($results['result'] != 'success' or !$results){
-        return "Unisset";
-    }
-    return $results['fullname'];
+    $query = \WHMCS\Database\Capsule::table('tblclients')->where('id', $uid)->first();
+    return $query->firstname.$query->lastname;
 }
 
 function prase_pid($products,$module = 'UnlimitedSocks'){
-    $products = $products['products']['product'];
     $product = array();
     foreach($products as $pro){
-        if($pro['module'] == $module){
-            $product[] = $pro['pid'];
+        if($pro['servertype'] == $module){
+            $product[] = $pro['id'];
         }
     }
     return $product;
 }
 
 function prase_product_DB($products,$module = 'UnlimitedSocks'){
-    $products = $products['products']['product'];
     $product = array();
     foreach($products as $pro){
-        if($pro['module'] == $module){
-            $product[$pro['pid']] = $pro['configoptions']['configoption'][1];
+        if($pro['servertype'] == $module){
+            $product[$pro['id']] = $pro['configoption1'];
         }
     }
     return $product;
 }
 
 function prase_routes($products){
-	$products = $products['products']['product'];
 	$routes = array();
 	foreach($products as $product){
-		$route = $product['configoptions']['configoption']['5'];
+		$route = $product['configoption5'];
 		foreach(prase_node($route) as $node){
 			array_push($routes,$node);
 		}
@@ -274,10 +265,9 @@ function prase_node($routes){
 }
 
 function get_client_products_with_pids($products,$pids,$status = array('Active')){
-	$products = $products['products']['product'];
 	$product = array();
 	foreach($products as $pro){
-		if(in_array($pro['pid'],$pids) && in_array($pro['status'],$status)){
+		if(in_array($pro['packageid'],$pids) && in_array($pro['domainstatus'],$status)){
 			$product[] = $pro;
 		}
 	}
@@ -296,18 +286,18 @@ function render_html_tpl($tpl,$data){
     }
 }
 
-function get_more_client_product_info($products,$server,$whproduct){
+function get_more_client_product_info($products,$server,$whproduct,$oldproducts){
     foreach($server as $ser){
-        $mysql = new mysqli($ser['serverhostname'], $ser['serverusername'], $ser['serverpassword']);
+        $mysql = new mysqli($ser['ipaddress'], $ser['username'], decrypt($ser['password']));
         $servername = 'mysqlserver'.$ser['id'];
         $$servername = $mysql;
     }
     $product = array();
     foreach($products as $pro){
-        $sid = $pro['serverid'];
+        $sid = $pro['server'];
         $mysql = 'mysqlserver'.$sid;
         $sql = $$mysql;
-        $sql->select_db($whproduct[$pro['pid']]);
+        $sql->select_db($whproduct[$pro['packageid']]);
         $sqlq = "SELECT * FROM `user` WHERE sid = " . $pro['id'];
         $ssacc = mysqli_fetch_array($sql->query($sqlq),MYSQLI_ASSOC);
         $details = array(
@@ -320,9 +310,19 @@ function get_more_client_product_info($products,$server,$whproduct){
             "LReset" => $ssacc['updated_at']
         );
         $pro['details'] = $details;
+        $pro['productname'] = GetNameFromProduct($oldproducts,$pro['packageid']);
         $product[$pro['id']] = $pro;
     }
     return $product;
+}
+
+function GetNameFromProduct($products,$packageid){
+    foreach ($products as $product) {
+        if($product['id'] == $packageid){
+            return $product['name'];
+        }
+    }
+    return 'Error';
 }
 
 function mconvert($number, $from, $to){
@@ -494,7 +494,8 @@ function MakeProductButton($datas){
     $html = '<form action="index.php" method="get">
                 <p>'.get_lang('clientareaproductdetails').': <textarea rows="6" cols="20" name="details" class="form-control">'.$datas['description'].'</textarea></p>
                 <p>'.get_lang('announcements').': <textarea name="announcements" rows="6" cols="20" class="form-control">'.$datas['configoptions']['configoption'][7].'</textarea></p>
-                <input type="hidden" name="EditProduct" value="EditProduct"></input>
+                <input type="hidden" name="UnlimitedSocksAction" value="EditProduct"></input>
+                <input type="hidden" name="times" value="'.time().'"></input>
                 <input type="hidden" name="id" value="'.$datas['pid'].'"></input>
                 <input class="btn btn-warning btn-block" type="submit" value="'.get_lang('submit').'" />
             </form>';
@@ -515,87 +516,50 @@ function MakeProductButton($datas){
     return $scr;
 }
 
-function ChangeSystemPorts(){
-    $command = 'GetClientsProducts';
-    $postData = array(
-    );
-    $results = localAPI($command, $postData, 1);
-    if($results['result'] != 'success' or !$results){
-        return false;
-    }
-    $command = 'GetProductsall';
-    $postData = array(
-        'module' => 'UnlimitedSocks',
-    );
-    $resultsp = localAPI($command, $postData, 1);
-    if($resultsp['result'] != 'success' or !$resultsp){
-        return false;
-    }
-    $command = 'GetServersDetails';
-    $postData = array(
-        'module' => 'UnlimitedSocks',
-    );
-    $resultsg = localAPI($command, $postData, 1);
-    if($resultsg['result'] != 'success' or !$resultsg){
-        print_r('API File(getserversdetails.php) Unfound');
-        return false;
-    }
-    $server = $resultsg['servers'];
-    $pids = prase_pid($resultsp);
-    $resserver = RebulidServerArray($resultsp);
-    $pro = get_client_products_with_pids($results,$pids,array('Active','Suspended'));
-    $pro = get_more_client_product_info($pro,$server,prase_product_DB($resultsp));
-    $pidser = Reprase_server($server);
-    $unuseableport = array();
-    foreach($pro as $proo){
-        if($proo['status'] != "Active"){
-             if(isset($proo['details']['Port'])){
-                array_push($unuseableport,$proo['details']['Port']);
-            }
+function GetStartPortFromProduct($products,$packageid){
+    foreach ($products as $product) {
+        if($product['id'] == $packageid){
+            return $product['configoption4'];
         }
     }
+    return '10000';
+}
+
+function ChangeSystemPorts(){
+    $query = \WHMCS\Database\Capsule::table('tblproducts')->where('servertype', 'UnlimitedSocks')->get();
+    $query2 = \WHMCS\Database\Capsule::table('tblhosting')->get();
+    $query3 = \WHMCS\Database\Capsule::table('tblservers')->where('type', 'UnlimitedSocks')->get();
+    $products = QueryToArray($query);
+    $clients = QueryToArray($query2);
+    $servers = QueryToArray($query3);
+    $pids = prase_pid($products);
+    $pro = get_client_products_with_pids($clients,$pids,array('Active','Suspended'));
+    $pro = get_more_client_product_info($pro,$servers,prase_product_DB($products),$products);
+    $whproduct = prase_product_DB($products);
+    $unuseableport = array();
+
+    foreach($servers as $ser){
+        $mysql = new mysqli($ser['ipaddress'], $ser['username'], decrypt($ser['password']));
+        $servername = 'mysqlserver'.$ser['id'];
+        $$servername = $mysql;
+    }
     foreach($pro as $proo){
-        if($proo['status'] == "Active"){
-            $serverd = $resserver[$proo['pid']];
-            $startport = $serverd['configoptions']['configoption']['4'];
+        if($proo['domainstatus'] == "Active"){
+            $startport = GetStartPortFromProduct($products,$proo['packageid']);
             $port = mt_rand($startport,65400);
             while(in_array($unuseableport,$port)){
                 $port = mt_rand($startport,65400);
             }
             array_push($unuseableport,$port);
-            var_dump($proo);
-            $sql = "Update `user` set `port`=".$port." WHERE sid =".$proo['id'];
-            $serverr = $pidser[$proo['serverid']];
-            $dbhost = $serverr['serverip'];
-            $dbname = $serverd['configoptions']['configoption']['1'];
-            $dbuser = $serverr['serverusername'];
-            $dbpass = $serverr['serverpassword'];
-            $db = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
-            $enable = $db->prepare($sql);
-            $todo = $enable->execute();
+            $mysql = 'mysqlserver'.$proo['server'];
+            $sql = $$mysql;
+            $sql->select_db($whproduct[$proo['packageid']]);
+            $sqlq = "Update `user` set `port`=".$port." WHERE sid =".$proo['id'];
+            $ssacc = $sql->query($sqlq);
         }
     }
     return 'success';
 }
-
-function RebulidServerArray($arr){
-    $rea = array();
-    foreach($arr['products']['product'] as $ar){
-        $rea[$ar['pid']] = $ar;
-    }
-    return $rea;
-}
-
-function Reprase_server($products,$module = 'UnlimitedSocks'){
-    $product = array();
-    foreach($products as $pro){
-        if($pro['type'] == $module){
-            $product[$pro['id']] = $pro;
-        }
-    }
-    return $product;
-}
-
 
 
 

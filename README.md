@@ -1,6 +1,6 @@
 # UnlimitedSocks
 ## 一个WHMCS的SS/SSR销售插件
-* 当前版本 2.1.0Beta4
+* 当前版本 2.1.0Beta5
 
 ## 支持的功能：
 * 流量图表
@@ -11,9 +11,17 @@
 * SS与SSR二维码
 * 随机密码
 * SSR订阅(ShadowsocksX-NG-R8的无法订阅请找客户端作者)
+* 管理面板(基本完成，想到了其他的再更新)
+
+## 管理面板功能
+* 修改产品描述以及公告
+* 查看用户流量使用情况
+* 暂停/取消暂停客户的服务
+* 重置客户流量
+* 重置所有端口(慎用)
 
 ## 开发中的功能  
-* 管理面板 85%
+* 管理面板 95%
 
 ## 注意事项
 * 如果要使用MysqlBandReset，你必须在MysqlBandReset.php中配置数据库信息
@@ -25,6 +33,7 @@
 * 如果你需要流量图表功能，请上传user_usage.sql
 * 随机密码的意思是你可以在购买时不填写自定义密码(避免眼滑用户看不见自定义密码选项)
 * 如果要使用APIBandReset，你必须在System->General->security中添加访问API的ip
+* 本插件已移除对以前的API的支持。
 * 需要更多支持，请开issue或者给我发邮件
 
 ## 其他
@@ -32,5 +41,5 @@
 ### 或者 [UnlimitedSocks安装教程](http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/)
 
 ## 如果感觉插件好用，嘘寒问暖不如打笔巨款～
-### Paypal捐赠 zzm317@outlook.com
-### 支付宝捐赠 admin@loli.ren
+* Paypal捐赠 zzm317@outlook.com
+* 支付宝捐赠 admin@loli.ren

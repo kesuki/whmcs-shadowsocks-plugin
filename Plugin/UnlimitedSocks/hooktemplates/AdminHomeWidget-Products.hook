@@ -12,7 +12,7 @@
         <tbody>
             <?php foreach($data as $datas){?>
                 <tr>
-                    <td class="hidden-xs hidden-sm"><?php echo($datas['pid'])?></td>
+                    <td class="hidden-xs hidden-sm"><?php echo($datas['id'])?></td>
                     <td><a href="configproducts.php?action=edit&id=<?php echo($datas['pid'])?>"><?php echo($datas['name'])?></a></td>
                     <td class="hidden-xs hidden-sm"><?php echo($datas['description'])?></td>
                     <td><?php if($datas['hidden'] == 0) echo (get_lang('active')); else echo(get_lang('hidden'));?></td>

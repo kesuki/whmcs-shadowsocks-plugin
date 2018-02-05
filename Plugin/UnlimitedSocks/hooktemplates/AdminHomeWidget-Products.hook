@@ -16,7 +16,7 @@
                     <td><a href="configproducts.php?action=edit&id=<?php echo($datas['pid'])?>"><?php echo($datas['name'])?></a></td>
                     <td class="hidden-xs hidden-sm"><?php echo($datas['description'])?></td>
                     <td><?php if($datas['hidden'] == 0) echo (get_lang('active')); else echo(get_lang('hidden'));?></td>
-                    <td><?php echo(makeproductbutton($datas));?></td>
+                    <td><?php echo(MakeProductButton($datas));?></td>
                 </tr> 
             <?php }?>   
         </tbody>

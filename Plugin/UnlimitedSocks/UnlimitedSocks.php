@@ -2,6 +2,8 @@
 if(!defined("WHMCS")){
   die("This file cannot be accessed directly");
 }
+use WHMCS\Database\Capsule;
+
 require_once 'lib/functions.php';
 require_once 'CardConfig.php';
 require_once 'LangConfig.php';
@@ -106,6 +108,11 @@ function UnlimitedSocks_ConfigOptions(){
 		'Options'     => array('1' => get_lang('enable'), '0' => get_lang('disable')),
 		'Description' => get_lang('card_enable_description')
 		),
+    get_lang('subscribe_enable') => array(
+		'Type'        => 'dropdown',
+		'Options'     => array('1' => get_lang('enable'), '0' => get_lang('disable')),
+		'Description' => get_lang('subscribe_enable_description')
+		),
 	);
 }
 
@@ -127,7 +134,7 @@ function UnlimitedSocks_TestConnection(array $params){
 }
 
 function UnlimitedSocks_RandomPass($length = 8){
-	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()-_ []{}<>~`+=,.;:/?|'; 
+	$chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%&*'; 
 	$password = ''; 
 	for ( $i = 0; $i < $length; $i++ ) 
 	{ 
@@ -410,6 +417,26 @@ function UnlimitedSocks_ChangePort(array $params){
     
 }
 
+function UnlimitedSocks_ResetToken($action,$uid,$sid,$password = null){
+	switch($action){
+		case 'ResetToken':
+			$query = \WHMCS\Database\Capsule::table('tblhosting')->where('id', $sid)->first();
+			if(empty($query->userid) || $uid != $query->userid){
+				die('Service Unisset or Unexpected Error');
+			}else{
+				$result = \WHMCS\Database\Capsule::table('tblhosting')->where('id', $sid)->update(['username' => $password]);
+				if(empty($result)){
+					die('Reset Failed');
+				}else{
+					die('Success');
+				}
+			}
+			break;
+		default :
+			break;
+	}
+}
+
 function UnlimitedSocks_ClientArea(array $params){
 	require_once 'Mobile_Detect.php';
 	$detect = new Mobile_Detect;
@@ -419,6 +446,13 @@ function UnlimitedSocks_ClientArea(array $params){
 	}else{
 		$date = time() - 60*60*24*3;
 		$datadays = 3;
+	}
+	if(isset($_GET['UnlimitedSocksAction']) && isset($_GET['TimeToken'])){
+		if(is_numeric($_GET['TimeToken']) && ((time() - $_GET['TimeToken']) <= 10 )){
+			UnlimitedSocks_ResetToken($_GET['UnlimitedSocksAction'],$params['userid'],$_GET['Serviceid'],UnlimitedSocks_RandomPass(12));
+		}else{
+			die('TimeCheck Failed');
+		}	
 	}
 	$query = initialize($params,$date);
 	try {
@@ -446,7 +480,7 @@ function UnlimitedSocks_ClientArea(array $params){
 			$download = "";
 			$chartinfo = array_reverse($exa,true);
 			foreach($chartinfo as $chart){
-				$label .= "'"."',";
+				$label .= "'',";
 				//$label .= "'".date('m/d  H:i',$chart['date'])."',";
 				$upload .= number_format(convert($chart['upload'], 'bytes', 'mb'), 2, '.', '').",";
 				$download .= number_format(convert($chart['download'], 'bytes', 'mb'), 2, '.', '').",";
@@ -482,6 +516,14 @@ function UnlimitedSocks_ClientArea(array $params){
                 $usedcards = $uuu;
             }
 		}
+
+		if($params['configoption9'] && $params['username'] == ""){
+			$newpsusern = UnlimitedSocks_RandomPass(12);
+			$result = Capsule::table('tblhosting')->where('id', $params['serviceid'])->update(['username' => $newpsusern]);
+		}else{
+			$newpsusern = $params['username'];
+		}
+
 		$nodes = $params['configoption5'];
 		$results = array();
 		$pingresults = array();
@@ -491,19 +533,14 @@ function UnlimitedSocks_ClientArea(array $params){
 		$x = 0;
 		foreach($noder as $nodee){
 			$nodee = explode('|', $nodee);
-			$y = 0;
 			$ress = array();
             if(!strstr($nodee[7], 'stop')){
-                foreach($nodee as $nodet){
-                    $ress[$y] = $nodet;
-                    $y ++;
-                    if($y == 2 and !$detect->isMobile() and $params['configoption6'] == 1){
-                        $res = ping_Server($nodet,$usage['port']);
-                        $pingresults[$z] = $res;
-                        $z ++;
-                    }
-                }
-                $b64 = makeb64($ress,$usage['port'],$usage['passwd']);
+            	if(!$detect->isMobile() and $params['configoption6'] == 1){
+					$res = ping_Server($nodee[1],$usage['port']);
+                    $pingresults[$z] = $res;
+                    $z ++;
+            	}
+                $b64 = makeb64($nodee,$usage['port'],$usage['passwd']);
                 $results[$x] = $b64;
                 $x++;
             }
@@ -536,7 +573,10 @@ function UnlimitedSocks_ClientArea(array $params){
                                                     'pingoption' => $params['configoption6'],
                                                     'infos' => $infos,
                                                     'usingcards' => $usedcards,
-                                                    'usedcards' => $useddcard)
+                                                    'usedcards' => $useddcard,
+                                                    'subscribe_enable' => $params['configoption9'],
+                                                    'subscribe_token' => $newpsusern,
+                                                	'HTTP_HOST' => $_SERVER['HTTP_HOST'])
 			);
 		}
 		return array(
@@ -583,12 +623,13 @@ function UnlimitedSocks_GetUsingCards($params){
 }
 
 function UnlimitedSocks_ClientAreaCustomButtonArray(){
+	$buttonarray = array();
     if(Card_Enable){
         if(UnlimitedSocks_TestCardConnection()){      
-            $buttonarray = array( get_lang('additional_bandwidth') => 'AdditionalBandwidth');
-            return $buttonarray;
+           $buttonarray = $buttonarray + array(get_lang('additional_bandwidth')=>'AdditionalBandwidth');
         }
     }
+    return $buttonarray;
 }
 
 function UnlimitedSocks_AdditionalBandwidth($params){
@@ -778,7 +819,7 @@ function microtime_float(){
 	return ((float)$usec + (float)$sec);
 }
 
-function makeb64($node,$port,$pass){
+function makeb64($node,$port,$pass,$group = null){
 	//ssr ip:port:protocol:method:obfs:b64pass/?obfsparam=xxx&protoparam=xxx&remarks=xxx
 	//ss data-params-SS="{$node[2]}:{$usage.passwd}@{$node[1]}:{$usage.port}"
 	//0 remark
@@ -792,11 +833,11 @@ function makeb64($node,$port,$pass){
 	if(strstr($node[7], 'ss&ssr')){
         $node[7] = 'ss&ssr';
         $node[] = array(
-            'ss' => make_ss($node,$pass,$port),
-            'ss1' => make_ss($node,$pass,$port,true),
-            'ss2' => make_ss($node,$pass,$port,true,true),
-            'wingy' => make_ss($node,$pass,$port,true,true,true),
-            'ssr' => make_ssr($node,$pass,$port),
+            'ss' => make_ss($node,$pass,$port,$group),
+            'ss1' => make_ss($node,$pass,$port,$group,true),
+            'ss2' => make_ss($node,$pass,$port,$group,true,true),
+            'wingy' => make_ss($node,$pass,$port,$group,true,true,true),
+            'ssr' => make_ssr($node,$pass,$port,$group),
         );
     }elseif(strstr($node[7], 'ssr')){
         $node[7] = 'ssr';
@@ -804,16 +845,16 @@ function makeb64($node,$port,$pass){
 	}else{
         $node[7] = 'ss';
         $node[] = array(
-            'ss' => make_ss($node,$pass,$port),
-            'ss1' => make_ss($node,$pass,$port,true),
-            'ss2' => make_ss($node,$pass,$port,true,true),
-            'wingy' => make_ss($node,$pass,$port,true,true,true),
+            'ss' => make_ss($node,$pass,$port,$group),
+            'ss1' => make_ss($node,$pass,$port,$group,true),
+            'ss2' => make_ss($node,$pass,$port,$group,true,true),
+            'wingy' => make_ss($node,$pass,$port,$group,true,true,true),
         );
 	}
 	return $node;
 }
 
-function make_ssr($node,$pass,$port){
+function make_ssr($node,$pass,$port,$group = null){
     $ssrs = "";
     $pass = str_replace('=','',base64_encode($pass));
     $ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
@@ -841,6 +882,15 @@ function make_ssr($node,$pass,$port){
        		$ssrs .= "remarks=";
             $data = str_replace('=','',base64_encode($node[0]));
             $ssrs .= $data;
+            $need = 1;
+        }
+        if($group){
+        	if($need){
+        		$ssrs .= "&";
+        	}
+       		$ssrs .= "group=";
+            $data = str_replace('=','',base64_encode($group));
+            $ssrs .= $data;
         }
     }
     $data = base64_encode($ssrs);
@@ -848,7 +898,7 @@ function make_ssr($node,$pass,$port){
     return $data;  
 }
 
-function make_ss($node,$pass,$port,$encodeu = false,$sip002 = false,$wingy=false){
+function make_ss($node,$pass,$port,$group = null,$encodeu = false,$sip002 = false,$wingy=false){
     $sss = $node[2].":".$pass."@".$node[1].":".$port;
     if(!$sip002){
         $sss = "ss://".base64_encode($sss);

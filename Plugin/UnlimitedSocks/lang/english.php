@@ -8,6 +8,7 @@ $_LANG['locale'] = "en";
 $_LANG['error_Service_Disable'] = "Error. Your Service might be down. Please refresh or contact the support";
 
 $_LANG['port'] = "Port";
+$_LANG['all_port'] = "all Ports";
 $_LANG['upload'] = "Upload";
 $_LANG['download'] = "Download";
 $_LANG['used'] = "Used";
@@ -33,7 +34,12 @@ $_LANG['all_traffic_chart'] = "All Traffic Chart";
 $_LANG['upload_traffic_chart'] = "Upload Traffic Chart";
 $_LANG['download_traffic_chart'] = "Download Traffic Chart";
 $_LANG['data_update_at'] = "Data updated at";
-
+$_LANG['subscribe_enable'] = "Enable Subscribe";
+$_LANG['subscribe_info'] = "Subscribe Info";
+$_LANG['subscribe_url'] = "Subscribe URL";
+$_LANG['subscribe_token'] = "Subscribe Token";
+$_LANG['reset_subscribe_token'] = "Reset Subscribe Token";
+$_LANG['subscribe_enable_description'] = "Enable Subscribe or not";
 //Settings
 $_LANG['database'] = "Database";
 $_LANG['resetbandwidth'] = "Reset Bandwidth";
@@ -93,10 +99,14 @@ $_LANG['version'] = "Version";
 $_LANG['are_you_sure_to_reset'] = "Are you sure to reset product";
 $_LANG['are_you_sure_to_suspend'] = "Are you sure to suspend product";
 $_LANG['are_you_sure_to_unsuspend'] = "Are you sure to unsuspend product";
+$_LANG['are_you_sure_to_reset_p'] = "Are you sure to reset";
+$_LANG['are_you_really_sure_to_reset_p'] = "Are you really sure to";
 $_LANG['suspendacc'] = "suspend";
 $_LANG['unsuspendacc'] = "unsuspend";
 
 //status
+$_LANG['edit'] = "Edit";
+$_LANG['submit'] = "Submit";
 $_LANG['active'] = "Active";
 $_LANG['hidden'] = "Hidden";
 $_LANG['resetallports'] = "Reset All Ports";

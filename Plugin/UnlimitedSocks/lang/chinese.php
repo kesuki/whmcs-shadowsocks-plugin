@@ -8,6 +8,7 @@ $_LANG['locale'] = "zh_cn";
 $_LANG['error_Service_Disable'] = "出现了一些问题，可能您的服务还未开通或者已经被删除，请稍后再来试试。";
 
 $_LANG['port'] = "端口";
+$_LANG['all_port'] = "全部端口";
 $_LANG['upload'] = "上传";
 $_LANG['download'] = "下载";
 $_LANG['used'] = "已使用";
@@ -33,6 +34,12 @@ $_LANG['all_traffic_chart'] = "总流量报表";
 $_LANG['upload_traffic_chart'] = "上传流量报表";
 $_LANG['download_traffic_chart'] = "下载流量报表";
 $_LANG['data_update_at'] = "数据更新于";
+$_LANG['subscribe_enable'] = "启用订阅";
+$_LANG['subscribe_info'] = "订阅信息";
+$_LANG['subscribe_url'] = "订阅地址";
+$_LANG['subscribe_token'] = "订阅口令";
+$_LANG['reset_subscribe_token'] = "重置订阅口令";
+$_LANG['subscribe_enable_description'] = "是否启用订阅功能";
 
 //设置
 $_LANG['database'] = "数据库";
@@ -93,10 +100,14 @@ $_LANG['version'] = "版本";
 $_LANG['are_you_sure_to_reset'] = "你确定要重置产品流量";
 $_LANG['are_you_sure_to_suspend'] = "你确定要暂停产品";
 $_LANG['are_you_sure_to_unsuspend'] = "你确定要取消暂停产品";
+$_LANG['are_you_sure_to_reset_p'] = "你确定要重置";
+$_LANG['are_you_really_sure_to_reset_p'] = "你真的确定要重置";
 $_LANG['suspendacc'] = "暂停";
 $_LANG['unsuspendacc'] = "取消暂停";
 
 //状态
+$_LANG['edit'] = "修改";
+$_LANG['submit'] = "提交";
 $_LANG['active'] = "激活";
 $_LANG['hidden'] = "隐藏";
 $_LANG['resetallports'] = "重置所有端口(本操作不可还原)";

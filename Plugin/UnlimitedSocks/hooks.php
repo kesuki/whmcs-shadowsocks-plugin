@@ -2,7 +2,7 @@
 if (!defined("WHMCS"))
     die("This file cannot be accessed directly");
 
-define("currentVersion", "2.1.0Beta3");
+define("currentVersion", "2.1.0Beta4");
 require_once 'lib/functions.php';
 multi_language_support();
 maincontroll();
@@ -206,7 +206,7 @@ function maincontroll(){
                     );
                     break;
                 case 'ResetSystemPorts':
-                    $result = ChangeSystemPorts();
+                    //$result = ChangeSystemPorts();
                     die($result);
                     break;
                 default:
@@ -416,12 +416,16 @@ function makemainresetbutton(){
     $scr = "<button type='button' class='btn btn-danger btn-block' onclick='Reset".$id."()'>".get_lang('resetallports')."</button>
                     <script>
                         function Reset".$id."(){
-                            layer.confirm('".get_lang('are_you_sure_to_reset').get_lang('port')."?', {
+                            layer.confirm('".get_lang('are_you_sure_to_reset_p').get_lang('all_port')."?', {
                               btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
                             }, function(){
-                              send('UnlimitedSocksAction=ResetSystemPorts&times=".time()."&id=all');
-                              layer.msg('".get_lang('success')."', {icon: 1});
-                              location.reload();
+                              layer.confirm('".get_lang('are_you_really_sure_to_reset_p').get_lang('all_port')."?', {
+                                  btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
+                                }, function(){
+                                  send('UnlimitedSocksAction=ResetSystemPorts&times=".time()."&id=all');
+                                  layer.msg('".get_lang('success')."', {icon: 1});
+                                  location.reload();
+                                });
                             });
                         }
                     </script>";
@@ -486,8 +490,29 @@ function makelayoutscript($res,$id,$user = null,$port = null){
     return $scr;
 }
 
-function makeproductbutton($pid){
-    
+function MakeProductButton($datas){
+    $html = '<form action="index.php" method="get">
+                <p>'.get_lang('clientareaproductdetails').': <textarea rows="6" cols="20" name="details" class="form-control">'.$datas['description'].'</textarea></p>
+                <p>'.get_lang('announcements').': <textarea name="announcements" rows="6" cols="20" class="form-control">'.$datas['configoptions']['configoption'][7].'</textarea></p>
+                <input type="hidden" name="EditProduct" value="EditProduct"></input>
+                <input type="hidden" name="id" value="'.$datas['pid'].'"></input>
+                <input class="btn btn-warning btn-block" type="submit" value="'.get_lang('submit').'" />
+            </form>';
+    $html = str_replace(array("\r\n", "\r", "\n"), "", $html);
+    $html = str_replace("   ", '', $html);
+    $scr = "<button type='button' class='btn btn-warning btn-block' onclick='EditProduct".$datas['pid']."()'>".get_lang('edit')."</button>
+                <script>
+                    function EditProduct".$datas['pid']."(){
+                        layer.open({
+                          type: 1,
+                          skin: 'layui-layer-rim', //加上边框
+                          maxmin: true, //开启最大化最小化按钮
+                          area: ['893px', '600px'],
+                          content: '".$html."'
+                        });
+                    }
+                </script>";
+    return $scr;
 }
 
 function ChangeSystemPorts(){

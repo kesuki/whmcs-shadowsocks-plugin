@@ -27,8 +27,8 @@
 需要更多支持，请开issue或者给我发邮件
 
 ## 其他
-### More Info in|更多详情请访问 http://www.mak-blog.com/whmcs-shadowsocks-plugin.html
-### 或者 http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/
+### 更多详情请访问 [whmcs模块的shadowsocks插件](http://www.mak-blog.com/whmcs-shadowsocks-plugin.html)
+### 或者 [UnlimitedSocks安装教程](http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/)
 
 ### Paypal捐赠 zzm317@outlook.com
 ### 支付宝捐赠 admin@loli.ren

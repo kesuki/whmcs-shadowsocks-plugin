@@ -1,5 +1,6 @@
 # UnlimitedSocks
-## 一个SS/SSR销售插件
+## 一个WHMCS的SS/SSR销售插件
+* 当前版本 2.1.0Beta4
 
 ## 支持的功能：
 * 流量图表
@@ -12,23 +13,24 @@
 * SSR订阅(ShadowsocksX-NG-R8的无法订阅请找客户端作者)
 
 ## 开发中的功能  
-管理面板 85%
+* 管理面板 85%
 
 ## 注意事项
-如果要使用MysqlBandReset，你必须在MysqlBandReset.php中配置数据库信息
-请添加服务器并在产品->模块设置中选择服务器
-请在更新插件后确认全部的产品和服务器配置正确
-数据库兼容旧版
-路线列表进行了更新，请检查然后更正
-因为移除了访问哈希，请重新配置产品->模块设置
-如果你需要流量图表功能，请上传user_usage.sql
-随机密码的意思是你可以在购买时不填写自定义密码(避免眼滑用户看不见自定义密码选项)
-如果要使用APIBandReset，你必须在System->General->security中添加访问API的ip
-需要更多支持，请开issue或者给我发邮件
+* 如果要使用MysqlBandReset，你必须在MysqlBandReset.php中配置数据库信息
+* 请添加服务器并在产品->模块设置中选择服务器
+* 请在更新插件后确认全部的产品和服务器配置正确
+* 数据库兼容旧版
+* 路线列表进行了更新，请检查然后更正
+* 因为移除了访问哈希，请重新配置产品->模块设置
+* 如果你需要流量图表功能，请上传user_usage.sql
+* 随机密码的意思是你可以在购买时不填写自定义密码(避免眼滑用户看不见自定义密码选项)
+* 如果要使用APIBandReset，你必须在System->General->security中添加访问API的ip
+* 需要更多支持，请开issue或者给我发邮件
 
 ## 其他
 ### 更多详情请访问 [whmcs模块的shadowsocks插件](http://www.mak-blog.com/whmcs-shadowsocks-plugin.html)
 ### 或者 [UnlimitedSocks安装教程](http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/)
 
+## 如果感觉插件好用，嘘寒问暖不如打笔巨款～
 ### Paypal捐赠 zzm317@outlook.com
 ### 支付宝捐赠 admin@loli.ren

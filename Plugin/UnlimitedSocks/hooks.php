@@ -493,17 +493,17 @@ function makelayoutscript($res,$id,$user = null,$port = null){
 function MakeProductButton($datas){
     $html = '<form action="index.php" method="get">
                 <p>'.get_lang('clientareaproductdetails').': <textarea rows="6" cols="20" name="details" class="form-control">'.$datas['description'].'</textarea></p>
-                <p>'.get_lang('announcements').': <textarea name="announcements" rows="6" cols="20" class="form-control">'.$datas['configoptions']['configoption'][7].'</textarea></p>
+                <p>'.get_lang('announcements').': <textarea name="announcements" rows="6" cols="20" class="form-control">'.$datas['configoption7'].'</textarea></p>
                 <input type="hidden" name="UnlimitedSocksAction" value="EditProduct"></input>
                 <input type="hidden" name="times" value="'.time().'"></input>
-                <input type="hidden" name="id" value="'.$datas['pid'].'"></input>
+                <input type="hidden" name="id" value="'.$datas['id'].'"></input>
                 <input class="btn btn-warning btn-block" type="submit" value="'.get_lang('submit').'" />
             </form>';
     $html = str_replace(array("\r\n", "\r", "\n"), "", $html);
     $html = str_replace("   ", '', $html);
-    $scr = "<button type='button' class='btn btn-warning btn-block' onclick='EditProduct".$datas['pid']."()'>".get_lang('edit')."</button>
+    $scr = "<button type='button' class='btn btn-warning btn-block' onclick='EditProduct".$datas['id']."()'>".get_lang('edit')."</button>
                 <script>
-                    function EditProduct".$datas['pid']."(){
+                    function EditProduct".$datas['id']."(){
                         layer.open({
                           type: 1,
                           skin: 'layui-layer-rim', //加上边框

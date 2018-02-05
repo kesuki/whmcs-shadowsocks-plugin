@@ -1,7 +1,8 @@
 # UnlimitedSocks
 ## A ShadowSocksR Seller Plugin|一个SS/SSR销售插件
 
-* Panel 80%Done|面板 80%完成
+* Panel 85%Done|面板 85%完成
+* added support for SSR Subscribe|增加SSR订阅功能(R8-NG的订阅失败请找客户端作者别找我，梅林上已测试订阅无问题。)
 * added support for product control|增加对产品管理的支持
 * fixed QRcode support for ss&ssr|已修复SS和SSR二维码支持
 * added traffic chart support|添加用户流量图表
@@ -44,7 +45,4 @@
 # 或者 http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/
 
 # Paypal Donate|Paypal捐赠 zzm317@outlook.com
-# Alipay Donate|支付宝捐赠 admin@fdtmc.tk
-
-* BTW I think a developer's most important ability is to obey the Open-Source Rules
-* Not the coding level he can achieve
+# Alipay Donate|支付宝捐赠 admin@loli.ren

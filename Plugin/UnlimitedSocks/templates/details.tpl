@@ -2,6 +2,42 @@
 <link rel="stylesheet" href="modules/servers/{$module}/templates/static/css/style.css">
 <script src="modules/servers/{$module}/templates/static/js/Chart.js"></script>
 <script src="modules/servers/{$module}/templates/static/js/qrcode.js"></script>
+<script src="modules/servers/{$module}/templates/static/js/html5-qrcode.js"></script>
+<script>
+    function send(arg) {
+      CreateXMLHttpRequest();
+      xmlhttp.onreadystatechange = callhandle;
+      xmlhttp.open("GET", arg,true);
+      xmlhttp.onreadystatechange = processResponse;
+      xmlhttp.send(null);
+    }
+
+    function CreateXMLHttpRequest() {
+      if (window.ActiveXObject) {
+        xmlhttp = new ActiveXObject("Microsoft.XMLHTTP");
+      }
+      else if (window.XMLHttpRequest) {
+        xmlhttp = new XMLHttpRequest();
+      }
+    }
+    
+    function callhandle() {
+      if (xmlhttp.readyState == 4) {
+        if (xmlhttp.status == 200) {
+          alert(xmlhttp.responseText);
+        }
+      }
+    }
+    
+    function processResponse(){
+        if(xmlhttp.readyState == 4){     //判断对象状态
+            if(xmlhttp.status == 200){
+            }else{
+                //alert("HTTP 200");
+            }
+        }
+    }
+</script>
 <style>
 .table-container
 {
@@ -48,7 +84,6 @@ background-color: rgba(0, 0, 0, .3);
 <div class="plugin">
     <div class="row">
         <div class="col-md-12">
-            <!--widget start-->
             <aside class="profile-nav alt hidden-xs">
                 <section class="panel">
                     <ul class="nav nav-pills nav-stacked">
@@ -61,7 +96,43 @@ background-color: rgba(0, 0, 0, .3);
                     </ul>
                 </section>
             </aside>
-            <!--widget end-->
+            {if $subscribe_enable == 1}
+            <section class="panel">
+                <header class="panel-heading">
+                    {get_lang('subscribe_info')}
+                </header>
+                <div class="panel-body table-container">
+                    <table class="table general-table">
+                        <thead>
+                            <tr>
+                                <th>{get_lang('subscribe_url')}</th>
+                                <!--<th>{get_lang('subscribe_token')}</th>-->
+                                <th class="hidden-xs hidden-sm">{get_lang('action')}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{$HTTP_HOST}/modules/servers/UnlimitedSocks/subscribe.php?sid={$serviceid}&token={$subscribe_token}</td>
+                                <!--<td>{$subscribe_token}</td>-->
+                                <td class="hidden-xs hidden-sm"><button type='button' class='btn btn-danger btn-block' onclick='ResetToken{$serviceid}()'>{get_lang('reset_subscribe_token')}</button>
+                                <script>
+                                    function ResetToken{$serviceid}(){
+                                        layer.confirm('{$LANG.remoteAuthn.areYouSure}?', {
+                                          btn: ['{$LANG.confirm}','{$LANG.orderForm.cancel}']
+                                        }, function(){
+                                          send('{$smarty.server.REQUEST_URI|replace:'&amp;':'&'}&UnlimitedSocksAction=ResetToken&Serviceid={$serviceid}&TimeToken={time()}');
+                                          layer.msg('{$LANG.moduleactionsuccess}');
+                                          location.reload();
+                                        });
+                                    }
+                                </script>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+            {/if}
             <section class="panel">
                 <header class="panel-heading">
                     {get_lang('user_info')}
@@ -169,9 +240,13 @@ background-color: rgba(0, 0, 0, .3);
                                             {get_lang('show_URL')}
                                         </button>
                                     {elseif $node[7] eq "ss"}
-                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS,Mac)" data-params="{$node[8]['ss']}">
+                                        <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS)" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
-                                            {get_lang('show_QRcode')}(SS(IOS,Mac))
+                                            {get_lang('show_QRcode')}(SS(IOS))
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs hidden-xs hidden-sm" data-type="SS(SSX-NG)" data-params="{$node[8]['ss2']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SSX-NG)
                                         </button>
                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(Android,Win)" data-params="{$node[8]['ss1']}">
                                             <i class="fa fa-qrcode"></i>
@@ -182,9 +257,13 @@ background-color: rgba(0, 0, 0, .3);
                                             {get_lang('show_URL')}
                                         </button>  
                                     {elseif $node[7] eq "ss&ssr"}
-                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS,Mac)" data-params="{$node[8]['ss']}">
+                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(IOS)" data-params="{$node[8]['ss']}">
                                             <i class="fa fa-qrcode"></i>
-                                            {get_lang('show_QRcode')}(SS(IOS,Mac))
+                                            {get_lang('show_QRcode')}(SS(IOS))
+                                        </button>
+                                        <button name="qrcode" class="btn btn-primary btn-xs hidden-xs hidden-sm" data-type="SS(SSX-NG)" data-params="{$node[8]['ss2']}">
+                                            <i class="fa fa-qrcode"></i>
+                                            {get_lang('show_QRcode')}(SSX-NG)
                                         </button>
                                         <button name="qrcode" class="btn btn-primary btn-xs" data-type="SS(Android,Win)" data-params="{$node[8]['ss1']}">
                                             <i class="fa fa-qrcode"></i>

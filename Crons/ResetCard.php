@@ -1,8 +1,8 @@
 <?php
 define('DB_NAME', '');//数据库名字
-define('DB_USER', '');//用户名
-define('DB_PASS', '');//密码
-define('DB_HOST', 'localhost');//数据库IP
+define('DB_USER', '');//数据库用户名
+define('DB_PASS', '');//数据库密码
+define('DB_HOST', 'localhost');//数据库IP/域名
 
 $cardmysql = new mysqli(DB_HOST, DB_USER, DB_PASS , DB_NAME);
 if(!$cardmysql) {

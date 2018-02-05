@@ -2,7 +2,7 @@
 if (!defined("WHMCS"))
     die("This file cannot be accessed directly");
 
-define("currentVersion", "2.1.0Beta3");
+define("currentVersion", "2.1.0Beta4");
 require_once 'lib/functions.php';
 multi_language_support();
 maincontroll();
@@ -106,7 +106,7 @@ class UnlimitedSocksProductsWidget extends \WHMCS\Module\AbstractWidget
     
     public function getData()
     {   
-        $command = 'GetProducts';
+        $command = 'GetProductsall';
         $postData = array(
             'module' => 'UnlimitedSocks',
         );
@@ -120,6 +120,7 @@ class UnlimitedSocksProductsWidget extends \WHMCS\Module\AbstractWidget
 
     public function generateOutput($data)
     {   
+    //print_r($data);
         if($data){
             render_html_tpl("AdminHomeWidget-Products",$data);   
         }else{
@@ -203,13 +204,17 @@ function maincontroll(){
                     $postData = array(
                         'accountid' => $_REQUEST['id'],
                     );
-                    break;  
+                    break;
+                case 'ResetSystemPorts':
+                    //$result = ChangeSystemPorts();
+                    die($result);
+                    break;
                 default:
-                    die('No Action');
+                    //die('No Action');
                     break;
             }
             $results = localAPI($command, $postData,1);
-            die('Success');
+            die('Success, '.json_encode($results));
         }else{
             die('Timeout');
         }
@@ -407,6 +412,26 @@ function generateMainscript(){
     </script>');
 }
 
+function makemainresetbutton(){
+    $scr = "<button type='button' class='btn btn-danger btn-block' onclick='Reset".$id."()'>".get_lang('resetallports')."</button>
+                    <script>
+                        function Reset".$id."(){
+                            layer.confirm('".get_lang('are_you_sure_to_reset_p').get_lang('all_port')."?', {
+                              btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
+                            }, function(){
+                              layer.confirm('".get_lang('are_you_really_sure_to_reset_p').get_lang('all_port')."?', {
+                                  btn: ['".get_lang('knowledgebaseyes')."','".get_lang('knowledgebaseno')."']
+                                }, function(){
+                                  send('UnlimitedSocksAction=ResetSystemPorts&times=".time()."&id=all');
+                                  layer.msg('".get_lang('success')."', {icon: 1});
+                                  location.reload();
+                                });
+                            });
+                        }
+                    </script>";
+    return $scr;
+}
+
 function makebutton($sid,$user,$port,$status){
     if($status == "Active"){
         $button = makelayoutscript("Reset",$sid,$user,$port);
@@ -465,12 +490,111 @@ function makelayoutscript($res,$id,$user = null,$port = null){
     return $scr;
 }
 
+function MakeProductButton($datas){
+    $html = '<form action="index.php" method="get">
+                <p>'.get_lang('clientareaproductdetails').': <textarea rows="6" cols="20" name="details" class="form-control">'.$datas['description'].'</textarea></p>
+                <p>'.get_lang('announcements').': <textarea name="announcements" rows="6" cols="20" class="form-control">'.$datas['configoptions']['configoption'][7].'</textarea></p>
+                <input type="hidden" name="EditProduct" value="EditProduct"></input>
+                <input type="hidden" name="id" value="'.$datas['pid'].'"></input>
+                <input class="btn btn-warning btn-block" type="submit" value="'.get_lang('submit').'" />
+            </form>';
+    $html = str_replace(array("\r\n", "\r", "\n"), "", $html);
+    $html = str_replace("   ", '', $html);
+    $scr = "<button type='button' class='btn btn-warning btn-block' onclick='EditProduct".$datas['pid']."()'>".get_lang('edit')."</button>
+                <script>
+                    function EditProduct".$datas['pid']."(){
+                        layer.open({
+                          type: 1,
+                          skin: 'layui-layer-rim', //加上边框
+                          maxmin: true, //开启最大化最小化按钮
+                          area: ['893px', '600px'],
+                          content: '".$html."'
+                        });
+                    }
+                </script>";
+    return $scr;
+}
 
+function ChangeSystemPorts(){
+    $command = 'GetClientsProducts';
+    $postData = array(
+    );
+    $results = localAPI($command, $postData, 1);
+    if($results['result'] != 'success' or !$results){
+        return false;
+    }
+    $command = 'GetProductsall';
+    $postData = array(
+        'module' => 'UnlimitedSocks',
+    );
+    $resultsp = localAPI($command, $postData, 1);
+    if($resultsp['result'] != 'success' or !$resultsp){
+        return false;
+    }
+    $command = 'GetServersDetails';
+    $postData = array(
+        'module' => 'UnlimitedSocks',
+    );
+    $resultsg = localAPI($command, $postData, 1);
+    if($resultsg['result'] != 'success' or !$resultsg){
+        print_r('API File(getserversdetails.php) Unfound');
+        return false;
+    }
+    $server = $resultsg['servers'];
+    $pids = prase_pid($resultsp);
+    $resserver = RebulidServerArray($resultsp);
+    $pro = get_client_products_with_pids($results,$pids,array('Active','Suspended'));
+    $pro = get_more_client_product_info($pro,$server,prase_product_DB($resultsp));
+    $pidser = Reprase_server($server);
+    $unuseableport = array();
+    foreach($pro as $proo){
+        if($proo['status'] != "Active"){
+             if(isset($proo['details']['Port'])){
+                array_push($unuseableport,$proo['details']['Port']);
+            }
+        }
+    }
+    foreach($pro as $proo){
+        if($proo['status'] == "Active"){
+            $serverd = $resserver[$proo['pid']];
+            $startport = $serverd['configoptions']['configoption']['4'];
+            $port = mt_rand($startport,65400);
+            while(in_array($unuseableport,$port)){
+                $port = mt_rand($startport,65400);
+            }
+            array_push($unuseableport,$port);
+            var_dump($proo);
+            $sql = "Update `user` set `port`=".$port." WHERE sid =".$proo['id'];
+            $serverr = $pidser[$proo['serverid']];
+            $dbhost = $serverr['serverip'];
+            $dbname = $serverd['configoptions']['configoption']['1'];
+            $dbuser = $serverr['serverusername'];
+            $dbpass = $serverr['serverpassword'];
+            $db = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
+            $enable = $db->prepare($sql);
+            $todo = $enable->execute();
+        }
+    }
+    return 'success';
+}
 
+function RebulidServerArray($arr){
+    $rea = array();
+    foreach($arr['products']['product'] as $ar){
+        $rea[$ar['pid']] = $ar;
+    }
+    return $rea;
+}
 
-
-
-
+function Reprase_server($products,$module = 'UnlimitedSocks'){
+    $product = array();
+    foreach($products as $pro){
+        if($pro['type'] == $module){
+            $product[$pro['id']] = $pro;
+        }
+    }
+    return $product;
+}
 
 
 

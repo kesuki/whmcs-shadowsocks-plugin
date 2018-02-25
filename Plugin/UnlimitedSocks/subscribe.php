@@ -28,6 +28,7 @@ if(isset($_GET['sid']) && isset($_GET['token'])){
 	$servers = $package->configoption5;
 	$noder = explode("\n",$servers);
 	$x = 0;
+	$results = "";
 	foreach($noder as $nodee){
 		$nodee = explode('|', $nodee);
         if(!strstr($nodee[7], 'stop')){
@@ -41,7 +42,7 @@ if(isset($_GET['sid']) && isset($_GET['token'])){
 		if(strstr($result[7], 'ss&ssr')){
         	$finalresult .= $result[8]['ssr'] . PHP_EOL;
 	    }elseif(strstr($result[7], 'ssr')){
-			$finalresult .= $result[8]['ssr'] . PHP_EOL;
+			$finalresult .= $result[8] . PHP_EOL;
 		}
 	}
 	echo(base64_encode($finalresult));

@@ -1,6 +1,5 @@
 <?php
 require(dirname(dirname(dirname(dirname(__FILE__)))).'/init.php');
-require('UnlimitedSocks.php');
 use WHMCS\Database\Capsule;
 if(isset($_GET['sid']) && isset($_GET['token'])){
 	$sid = $_GET['sid'];
@@ -20,33 +19,67 @@ if(isset($_GET['sid']) && isset($_GET['token'])){
 	$dbuser = $server->username;
 	$dbpass = decrypt($server->password);
 	$db = new PDO('mysql:host=' . $dbhost . ';dbname=' . $dbname, $dbuser, $dbpass);
-	$usage = $db->prepare($query['USERINFO']);
-	$usage->bindValue(':sid', $params['serviceid']);
+	$usage = $db->prepare('SELECT `id`,`passwd`,`port`,`t`,`u`,`d`,`transfer_enable`,`enable`,`created_at`,`updated_at`,`need_reset`,`sid` FROM `user` WHERE `sid` = :sid');
+	$usage->bindValue(':sid', $sid);
 	$usage->execute();
 	$usage = $usage->fetch();
-
 	$servers = $package->configoption5;
 	$noder = explode("\n",$servers);
-	$x = 0;
 	$results = "";
 	foreach($noder as $nodee){
 		$nodee = explode('|', $nodee);
         if(!strstr($nodee[7], 'stop')){
-            $b64 = makeb64($nodee,$usage['port'],$usage['passwd'],$package->name);
-            $results[$x] = $b64;
-            $x++;
+			if(strstr($nodee[7], 'ss&ssr') or strstr($nodee[7], 'ssr')){
+				$results .= make_sssr($nodee,$usage['passwd'],$usage['port'],$package->name).PHP_EOL;
+			}
         }
 	}
-	$finalresult = '';
-	foreach($results as $result){
-		if(strstr($result[7], 'ss&ssr')){
-        	$finalresult .= $result[8]['ssr'] . PHP_EOL;
-	    }elseif(strstr($result[7], 'ssr')){
-			$finalresult .= $result[8] . PHP_EOL;
-		}
-	}
-	echo(base64_encode($finalresult));
+	echo(str_replace('=','',base64_encode($results)));
 
 }else{
 	die('Invaild');
+}
+
+function make_sssr($node,$pass,$port,$group = null){
+    $ssrs = "";
+    $pass = str_replace('=','',base64_encode($pass));
+    $ssrs = $node[1].":".$port.":".$node[3].":".$node[2].":".$node[5].":".$pass;
+    if($node[0] or $node[4] or $node[6]){
+        $ssrs .= "/?";
+        if($node[4]){
+        	$ssrs .= "protoparam=";
+            $data = str_replace('=','',base64_encode($node[4]));
+            $ssrs .= $data;
+            $need = 1;
+        }
+        if($node[6]){
+        	if($need){
+        		$ssrs .= "&";
+        	}
+        	$ssrs .= "obfsparam=";
+            $data = str_replace('=','',base64_encode($node[6]));
+            $ssrs .= $data;
+            $need = 1;
+        }
+        if($node[0]){
+        	if($need){
+        		$ssrs .= "&";
+        	}
+       		$ssrs .= "remarks=";
+            $data = str_replace('=','',base64_encode($node[0]));
+            $ssrs .= $data;
+            $need = 1;
+        }
+        if($group){
+        	if($need){
+        		$ssrs .= "&";
+        	}
+       		$ssrs .= "group=";
+            $data = str_replace('=','',base64_encode($group));
+            $ssrs .= $data;
+        }
+    }
+    $data = base64_encode($ssrs);
+    $data = "ssr://".str_replace('=','',$data);
+    return $data;  
 }

@@ -10,7 +10,7 @@
 * 服务器ping测试
 * SS与SSR二维码
 * 随机密码
-* SSR订阅(ShadowsocksX-NG-R8的无法订阅请找客户端作者)
+* SSR订阅
 * 管理面板(基本完成，想到了其他的再更新)
 
 ## 管理面板功能
@@ -35,7 +35,7 @@
 
 ## 其他
 * 更多详情请访问 [whmcs模块的shadowsocks插件](http://www.mak-blog.com/whmcs-shadowsocks-plugin.html)
-* 或者 [UnlimitedSocks安装教程](http://www.loli.ren/index.php/2017/07/24/unlimitedsocks%E5%AE%89%E8%A3%85%E6%96%B9%E6%B3%95/)
+* 或者 [UnlimitedSocks安装教程](https://www.loli.ren/archives/48/)
 
 ## 如果感觉插件好用，嘘寒问暖不如打笔巨款～
 * Paypal捐赠 zzm317@outlook.com

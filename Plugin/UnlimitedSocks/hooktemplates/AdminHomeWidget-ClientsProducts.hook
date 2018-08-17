@@ -19,16 +19,16 @@
             <?php foreach($data as $datas){?>
                 <tr>
                     <td><a href="clientsservices.php?id=<?php echo($datas['id'])?>"><?php echo($datas['id'])?></a></td>
-                    <td><a href="clientssummary.php?userid=<?php echo($datas['clientid'])?>"><?php echo(getusername($datas['clientid']))?></a></td>
-                    <td><?php echo($datas['name'])?></td>
+                    <td><a href="clientssummary.php?userid=<?php echo($datas['clientid'])?>"><?php echo(getusername($datas['userid']))?></a></td>
+                    <td><?php echo($datas['productname'])?></td>
                     <td class="hidden-xs hidden-sm"><?php echo(get_lang('orderpaymentterm'.strtolower(str_replace('-','',$datas['billingcycle']))))?></td>
                     <td class="hidden-xs hidden-sm"><?php echo($datas['translated_groupname'])?></td>
-                    <td><?php echo(get_lang('clientarea'.strtolower($datas['status'])))?></td>
+                    <td><?php echo(get_lang('clientarea'.strtolower($datas['domainstatus'])))?></td>
                     <td><?php echo($datas['details']['Port'])?></td>
                     <td class="hidden-xs hidden-sm"><?php echo(MMBGB($datas['details']['U']))?></td>
                     <td class="hidden-xs hidden-sm"><?php echo(MMBGB($datas['details']['D']))?></td>
                     <td><?php echo(MMBGB($datas['details']['A']))?></td>
-                    <td><?php echo(makebutton($datas['id'],getusername($datas['clientid']),$datas['details']['Port'],$datas['status']))?></td>
+                    <td><?php echo(makebutton($datas['id'],getusername($datas['clientid']),$datas['details']['Port'],$datas['domainstatus']))?></td>
                 </tr> 
             <?php }?>   
         </tbody>
